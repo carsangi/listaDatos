@@ -8,13 +8,15 @@ import { NgChartsModule } from 'ng2-charts';
 import { NavegationComponent } from './components/navegation/navegation.component';
 import { LastmonthComponent } from './components/lastmonth/lastmonth.component';
 import { AlldataComponent } from './components/alldata/alldata.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavegationComponent,
     LastmonthComponent,
-    AlldataComponent
+    AlldataComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
