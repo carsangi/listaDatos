@@ -1,1 +1,116 @@
-<p>alldata works!</p>
+<div class="main-container">
+  <div class="row">
+    <aside class="asideFiltros col-3">
+      <h1>Servicios</h1>
+      <div class="row">
+        <h3 id="tituloFiltro">Fechas</h3>
+        <div class="radioButton">
+          <input
+            type="radio"
+            id="fechaSolicitud"
+            name="fav_language"
+            value="HTML"
+          />
+          <label for="fechaSolicitud" (click)="getFechas('B')"
+            >Fecha de solicitud</label
+          ><br />
+          <input
+            type="radio"
+            id="fechaActivacion"
+            name="fav_language"
+            value="CSS"
+          />
+          <label for="fechaActivacion" (click)="getFechas('D')"
+            >Fecha de activación</label
+          ><br />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <mat-form-field appearance="standard" id="fecha">
+            <mat-label>Fecha</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input
+                [(ngModel)]="fechaDesde"
+                matStartDate
+                placeholder="D/M/AAAA"
+              />
+              <input
+                [(ngModel)]="fechaHasta"
+                matEndDate
+                placeholder="D/M/AAAA"
+              />
+            </mat-date-range-input>
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <i class="bi bi-search" id="buscar" (click)="buscar()">
+          <label for="">Buscar</label>
+        </i>
+      </div>
+      <div class="row">
+        <div id="localidad">
+          <h3>Departamentos</h3>
+          <select
+            [(ngModel)]="opcionDepartamento"
+            (change)="llenarDatos()"
+            name="departamento"
+            id="departamento"
+          >
+            <option [value]="0">Departamento</option>
+            <option [value]="" *ngFor="let item of departamentos">
+              {{ item }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </aside>
+    <section class="sectionGraficas col-9">
+      <div class="row">
+        <div style="display: block" id="main-chart" class="mt-5">
+          <canvas
+            baseChart
+            [data]="barChartData1"
+            [options]="barChartOptions1"
+            [plugins]="barChartPlugins1"
+            [type]="barChartType1"
+          >
+          </canvas>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div style="display: block" id="left-chart" class="mt-5">
+            <canvas
+              baseChart
+              [data]="barChartData2"
+              [options]="barChartOptions2"
+              [plugins]="barChartPlugins2"
+              [type]="barChartType2"
+            >
+            </canvas>
+          </div>
+        </div>
+        <div class="col-6">
+          <div style="display: block" id="right-chart" class="mt-5">
+            <canvas
+              baseChart
+              [data]="barChartData3"
+              [options]="barChartOptions3"
+              [plugins]="barChartPlugins3"
+              [type]="barChartType3"
+            >
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+

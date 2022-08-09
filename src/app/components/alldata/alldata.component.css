@@ -1,0 +1,100 @@
+.btn {
+    height: 50px;
+    width: 300px;
+  }
+
+  select {
+    margin-left: -13px;
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+  }
+
+  #localidad select {
+    height: 40px;
+    width: 290px;
+  }
+
+  #localidad h3 {
+    margin-top: 8px;
+    font-weight: 500;
+    font-size: large;
+  }
+
+  mat-form-field {
+    color: #2a2820;
+  }
+
+  mat-label {
+    color: #2a2820;
+  }
+
+  mat-datepicker-toggle {
+    color: #2a2820;
+  }
+
+  mat-form-field:hover {
+    color: #4498EC;
+  }
+
+  mat-datepicker-toggle:hover {
+    color: #4498EC;
+  }
+
+  #buscar {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #2a2820;
+    border-radius: 5px;
+    color: #2a2820;
+    cursor: pointer;
+  }
+
+  #buscar:hover {
+    padding: 10px;
+    border: 1px solid #4498EC;
+    border-radius: 5px;
+    background-color: #4498EC;
+    color: white;
+    cursor: pointer;
+  }
+
+  #buscar label{
+    margin-left: 10px;
+  }
+  #fecha {
+    width: 210px;
+    font-size: 14px;
+  }
+
+  .sectionGraficas {
+    border-left: 1px solid #4498EC;
+    background-color: whitesmoke;
+  }
+
+  aside {
+    color: #2a2820;
+  }
+
+  aside h1 {
+    font-weight: 500;
+    font-size: 35px;
+  }
+
+  #tituloFiltro {
+    font-weight: 500;
+    font-size: large;
+  }
+
+  .radioButton {
+    font-size: medium;
+  }
+
+  .radioButton label {
+    margin-left: 5px;
+    margin-bottom: 8px;
+  }
+
+  .radioButton label:hover {
+    color: #4498EC;
+  }
