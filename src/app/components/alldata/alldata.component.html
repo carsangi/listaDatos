@@ -1,9 +1,48 @@
 <div class="main-container">
   <div class="row">
+    <section class="sectionGraficas col-9">
+      <div class="row">
+        <div style="display: block" id="main-chart" class="mt-5">
+          <canvas
+            baseChart
+            [data]="barChartData1"
+            [options]="barChartOptions1"
+            [plugins]="barChartPlugins1"
+            [type]="barChartType1"
+          >
+          </canvas>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div style="display: block" id="left-chart" class="mt-5">
+            <canvas
+              baseChart
+              [data]="barChartData2"
+              [options]="barChartOptions2"
+              [plugins]="barChartPlugins2"
+              [type]="barChartType2"
+            >
+            </canvas>
+          </div>
+        </div>
+        <div class="col-6">
+          <div style="display: block" id="right-chart" class="mt-5">
+            <canvas
+              baseChart
+              [data]="barChartData3"
+              [options]="barChartOptions3"
+              [plugins]="barChartPlugins3"
+              [type]="barChartType3"
+            >
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </section>
     <aside class="asideFiltros col-3">
       <h1>Servicios</h1>
       <div class="row">
-        <h3 id="tituloFiltro">Fechas</h3>
         <div class="radioButton">
           <input
             type="radio"
@@ -56,7 +95,6 @@
       </div>
       <div class="row">
         <div id="localidad">
-          <h3>Departamentos</h3>
           <select
             [(ngModel)]="opcionDepartamento"
             (change)="llenarDatos()"
@@ -71,46 +109,6 @@
         </div>
       </div>
     </aside>
-    <section class="sectionGraficas col-9">
-      <div class="row">
-        <div style="display: block" id="main-chart" class="mt-5">
-          <canvas
-            baseChart
-            [data]="barChartData1"
-            [options]="barChartOptions1"
-            [plugins]="barChartPlugins1"
-            [type]="barChartType1"
-          >
-          </canvas>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <div style="display: block" id="left-chart" class="mt-5">
-            <canvas
-              baseChart
-              [data]="barChartData2"
-              [options]="barChartOptions2"
-              [plugins]="barChartPlugins2"
-              [type]="barChartType2"
-            >
-            </canvas>
-          </div>
-        </div>
-        <div class="col-6">
-          <div style="display: block" id="right-chart" class="mt-5">
-            <canvas
-              baseChart
-              [data]="barChartData3"
-              [options]="barChartOptions3"
-              [plugins]="barChartPlugins3"
-              [type]="barChartType3"
-            >
-            </canvas>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </div>
 

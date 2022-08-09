@@ -9,13 +9,13 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-alldata',
   templateUrl: './alldata.component.html',
-  styleUrls: ['./alldata.component.css']
+  styleUrls: ['./alldata.component.css'],
 })
 export class AlldataComponent implements OnInit {
   public barChartData1: ChartData<'bar'> | any | undefined;
   public barChartData2: ChartData<'bar'> | any | undefined;
   public barChartData3: ChartData<'bar'> | any | undefined;
-  @HostBinding('class') classes = 'container'
+  @HostBinding('class') classes = 'container';
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   column: any = [];
   data: any;
@@ -24,18 +24,16 @@ export class AlldataComponent implements OnInit {
   departamentos: any;
   municipios: any;
   opcionDepartamento: any = 0;
-  selector: string = "A";
+  selector: string = 'A';
   estadosOperacion: any = [];
   estadosRetiro: any = [];
-  constructor(private consultaAPIservice: ConsultaAPIService) { }
+  constructor(private consultaAPIservice: ConsultaAPIService) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   getFechas(column: string) {
-    this.consultaAPIservice.getConsultaColumnas(column).subscribe(
-      res => {
-        this.column = res;
-      })
+    this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
+      this.column = res;
+    });
   }
 
   buscar() {
@@ -55,9 +53,8 @@ export class AlldataComponent implements OnInit {
     let fechaA = new Date(añoA, mesA, diaA);
     let fechaB = new Date(añoB, mesB, diaB);
     for (let row = 1; row < this.column.length; row++) {
-      let element = moment(this.column[row].toString(), "DD-MM-YYYY");
+      let element = moment(this.column[row].toString(), 'DD-MM-YYYY');
       if (element == null) {
-
       } else {
         let dia = element.date();
         let mes = element.month();
@@ -67,11 +64,10 @@ export class AlldataComponent implements OnInit {
           var objeto = {
             fecha: fechaActual,
             rowIndex: row + 1,
-          }
+          };
           arregloFechas.push(objeto);
         }
       }
-
     }
     this.divirArreglo(arregloFechas);
   }
@@ -82,24 +78,24 @@ export class AlldataComponent implements OnInit {
     let rowAnterior: number;
     arregloFechas.map((fechaActual: any, index: number) => {
       if (aux.length == 0) {
-        rowAnterior = fechaActual["rowIndex"];
-        aux.push(fechaActual["rowIndex"]);
+        rowAnterior = fechaActual['rowIndex'];
+        aux.push(fechaActual['rowIndex']);
       } else {
-        if (fechaActual["rowIndex"] == (rowAnterior + 1)) {
-          rowAnterior = fechaActual["rowIndex"];
-          aux.push(fechaActual["rowIndex"]);
+        if (fechaActual['rowIndex'] == rowAnterior + 1) {
+          rowAnterior = fechaActual['rowIndex'];
+          aux.push(fechaActual['rowIndex']);
         } else {
           matrizFecha.push(aux);
           aux = [];
-          rowAnterior = fechaActual["rowIndex"];
-          aux.push(fechaActual["rowIndex"]);
+          rowAnterior = fechaActual['rowIndex'];
+          aux.push(fechaActual['rowIndex']);
         }
-        if ((index + 1) == arregloFechas.length) {
+        if (index + 1 == arregloFechas.length) {
           matrizFecha.push(aux);
         }
       }
       index++;
-    })
+    });
     this.consultarFechas(matrizFecha);
   }
 
@@ -108,17 +104,18 @@ export class AlldataComponent implements OnInit {
     for (let i = 0; i < matrizFecha.length; i++) {
       const subArreglo = matrizFecha[i];
       let indexInicio = subArreglo[0];
-      let indexFinal = subArreglo[(subArreglo.length - 1)];
-      this.consultaAPIservice.getConsultaDatos(indexInicio, indexFinal).subscribe(
-        res => {
+      let indexFinal = subArreglo[subArreglo.length - 1];
+      this.consultaAPIservice
+        .getConsultaDatos(indexInicio, indexFinal)
+        .subscribe((res) => {
           this.data.push(res);
-          if (i == (matrizFecha.length - 1)) {
+          if (i == matrizFecha.length - 1) {
             this.filtrarEstadoOperacion();
             this.filtrarEstadoRetiro();
             this.filtrarDepartamento();
             this.llenarDatos();
           }
-        })
+        });
     }
   }
 
@@ -127,21 +124,19 @@ export class AlldataComponent implements OnInit {
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
         aux.push(element2[4]);
-      })
-
+      });
     });
     this.estadosOperacion = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
     });
     this.estadosOperacion.sort();
-
   }
   filtrarEstadoRetiro() {
     let aux: any = [];
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
         aux.push(element2[5]);
-      })
+      });
     });
     this.estadosRetiro = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
@@ -153,13 +148,15 @@ export class AlldataComponent implements OnInit {
     this.data.map((element: any) => {
       element.forEach((element2: any) => {
         aux.push(element2[2]);
-      })
+      });
     });
     this.departamentos = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
     });
+
     this.departamentos.sort();
-    console.log(this.departamentos)
+    console.log(this.departamentos);
+    
   }
 
   filtrarMunicipio(departamento: string) {
@@ -169,7 +166,7 @@ export class AlldataComponent implements OnInit {
         if (element2[2] == departamento) {
           aux.push(element2[1]);
         }
-      })
+      });
     });
     this.municipios = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
@@ -183,28 +180,30 @@ export class AlldataComponent implements OnInit {
     let arregloRecuperados: any = [];
     let arregloFallecidos: any = [];
     let labelGrafica: any = [];
-    let dato1: any = [], dato2: any = [], dato3: any = [], dato4: any = [];
+    let dato1: any = [],
+      dato2: any = [],
+      dato3: any = [],
+      dato4: any = [];
     let lDato1, lDato2, lDato3, lDato4;
-    let cRecuperados: number = 0, cFallecidos: number = 0;
-    console.log(typeof (this.estadosOperacion[1]));
+    let cRecuperados: number = 0,
+      cFallecidos: number = 0;
+    console.log(this.estadosOperacion);
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
       for (let i = 0; i < this.departamentos.length; i++) {
         this.data.map((element: any) => {
           element.forEach((dep: any) => {
             if (this.departamentos[i].match(dep[2])) {
-              console.log(dep[4]);
-
-              // arregloPequenio.push(dep);
-              // if ("INSTALADO".match(dep[4])) {
-              //   lDato1 = 'INSTALADO';
-              //   cRecuperados++;
-              // } else if ("CANCELADO".match(dep[4])) {
-              //   lDato2 = 'CANCELADO';
-              //   cFallecidos++;
-              // }
+              arregloPequenio.push(dep);
+              if ('INSTALADO'.match(dep[4])) {
+                lDato1 = 'INSTALADO';
+                cRecuperados++;
+              } else {
+                lDato2 = 'No instalado';
+                cFallecidos++;
+              }
             }
-          })
+          });
         });
         arregloGrande.push(arregloPequenio);
         arregloRecuperados.push(cRecuperados);
@@ -215,22 +214,34 @@ export class AlldataComponent implements OnInit {
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      this.llenarGrafica(labelGrafica, dato1, dato2, dato3, dato4, lDato1, lDato2, lDato3, lDato4)
+      this.llenarGrafica(
+        labelGrafica,
+        dato1,
+        dato2,
+        dato3,
+        dato4,
+        lDato1,
+        lDato2,
+        lDato3,
+        lDato4
+      );
     } else if (this.opcionDepartamento != 0) {
       this.filtrarMunicipio(this.opcionDepartamento);
       labelGrafica = this.municipios;
       for (let i = 0; i < this.municipios.length; i++) {
-        this.data.map((mun: any) => {
-          if (this.municipios[i].match(mun[4])) {
-            arregloPequenio.push(mun);
-            lDato1 = 'Recuperado';
-            lDato2 = 'Fallecido';
-            if ("Recuperado".match(mun[9])) {
-              cRecuperados++;
-            } else if ("Fallecido".match(mun[9])) {
-              cFallecidos++;
+        this.data.map((element: any) => {
+          element.forEach((mun: any) => {
+            if (this.municipios[i].match(mun[1])) {
+              arregloPequenio.push(mun);
+              lDato1 = 'INSTALADO';
+              lDato2 = 'INSTALADO';
+              if ('INSTALADO'.match(mun[4])) {
+                cRecuperados++;
+              } else{
+                cFallecidos++;
+              }
             }
-          }
+          });
         });
         arregloGrande.push(arregloPequenio);
         arregloRecuperados.push(cRecuperados);
@@ -241,20 +252,45 @@ export class AlldataComponent implements OnInit {
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      this.llenarGrafica(labelGrafica, dato1, dato2, dato3, dato4, lDato1, lDato2, lDato3, lDato4)
+      this.llenarGrafica(
+        labelGrafica,
+        dato1,
+        dato2,
+        dato3,
+        dato4,
+        lDato1,
+        lDato2,
+        lDato3,
+        lDato4
+      );
     }
   }
 
-  llenarGrafica(labelGrafica: any, dato1: any, dato2: any, dato3: any, dato4: any, lDato1: any, lDato2: any, lDato3: any, lDato4: any) {
+  llenarGrafica(
+    labelGrafica: any,
+    dato1: any,
+    dato2: any,
+    dato3: any,
+    dato4: any,
+    lDato1: any,
+    lDato2: any,
+    lDato3: any,
+    lDato4: any
+  ) {
     if (dato1 != null && dato2 != null) {
       this.barChartData1 = {
         labels: labelGrafica,
         datasets: [
           { data: dato1, label: lDato1 },
-          { data: dato2, label: lDato2 }
-        ]
-      }
-    } else if (dato1 != null && dato2 != null && dato3 != null && dato4 != null) {
+          { data: dato2, label: lDato2 },
+        ],
+      };
+    } else if (
+      dato1 != null &&
+      dato2 != null &&
+      dato3 != null &&
+      dato4 != null
+    ) {
       this.barChartData1 = {
         labels: labelGrafica,
         datasets: [
@@ -262,8 +298,8 @@ export class AlldataComponent implements OnInit {
           { data: dato2, label: lDato2 },
           { data: dato3, label: lDato3 },
           { data: dato4, label: lDato4 },
-        ]
-      }
+        ],
+      };
     }
 
     this.chart?.update();
@@ -275,8 +311,8 @@ export class AlldataComponent implements OnInit {
     scales: {
       x: {},
       y: {
-        min: 0
-      }
+        min: 0,
+      },
     },
     plugins: {
       legend: {
@@ -284,14 +320,12 @@ export class AlldataComponent implements OnInit {
       },
       datalabels: {
         anchor: 'end',
-        align: 'end'
-      }
-    }
+        align: 'end',
+      },
+    },
   };
   public barChartType1: ChartType = 'bar';
-  public barChartPlugins1 = [
-    DataLabelsPlugin
-  ];
+  public barChartPlugins1 = [DataLabelsPlugin];
 
   /* Barra chart2*/
   public barChartOptions2: ChartConfiguration['options'] = {
@@ -299,8 +333,8 @@ export class AlldataComponent implements OnInit {
     scales: {
       x: {},
       y: {
-        min: 0
-      }
+        min: 0,
+      },
     },
     plugins: {
       legend: {
@@ -308,14 +342,12 @@ export class AlldataComponent implements OnInit {
       },
       datalabels: {
         anchor: 'end',
-        align: 'end'
-      }
-    }
+        align: 'end',
+      },
+    },
   };
   public barChartType2: ChartType = 'bar';
-  public barChartPlugins2 = [
-    DataLabelsPlugin
-  ];
+  public barChartPlugins2 = [DataLabelsPlugin];
 
   /* Barra chart3*/
   public barChartOptions3: ChartConfiguration['options'] = {
@@ -323,8 +355,8 @@ export class AlldataComponent implements OnInit {
     scales: {
       x: {},
       y: {
-        min: 0
-      }
+        min: 0,
+      },
     },
     plugins: {
       legend: {
@@ -332,12 +364,10 @@ export class AlldataComponent implements OnInit {
       },
       datalabels: {
         anchor: 'end',
-        align: 'end'
-      }
-    }
+        align: 'end',
+      },
+    },
   };
   public barChartType3: ChartType = 'bar';
-  public barChartPlugins3 = [
-    DataLabelsPlugin
-  ];
+  public barChartPlugins3 = [DataLabelsPlugin];
 }
