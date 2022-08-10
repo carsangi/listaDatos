@@ -17,7 +17,8 @@ export class AlldataComponent implements OnInit {
   public barChartData3: ChartData<'bar'> | any | undefined;
   @HostBinding('class') classes = 'container';
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
-  column: any = [];
+  columnDate: any = [];
+  columnFilter: any = [];
   data: any;
   fechaDesde: any;
   fechaHasta: any;
@@ -27,12 +28,14 @@ export class AlldataComponent implements OnInit {
   selector: string = 'A';
   estadosOperacion: any = [];
   estadosRetiro: any = [];
+  opcionFiltrado: any;
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
   ngOnInit(): void {}
+
   getFechas(column: string) {
     this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
-      this.column = res;
+      this.columnDate = res;
     });
   }
 
@@ -52,8 +55,8 @@ export class AlldataComponent implements OnInit {
     let añoB: number = fechaHasta.year();
     let fechaA = new Date(añoA, mesA, diaA);
     let fechaB = new Date(añoB, mesB, diaB);
-    for (let row = 1; row < this.column.length; row++) {
-      let element = moment(this.column[row].toString(), 'DD-MM-YYYY');
+    for (let row = 1; row < this.columnDate.length; row++) {
+      let element = moment(this.columnDate[row].toString(), 'DD-MM-YYYY');
       if (element == null) {
       } else {
         let dia = element.date();
@@ -96,10 +99,10 @@ export class AlldataComponent implements OnInit {
       }
       index++;
     });
-    this.consultarFechas(matrizFecha);
+    this.consultarDatos(matrizFecha);
   }
 
-  consultarFechas(matrizFecha: Array<any>) {
+  consultarDatos(matrizFecha: Array<any>) {
     this.data = [];
     for (let i = 0; i < matrizFecha.length; i++) {
       const subArreglo = matrizFecha[i];
@@ -155,8 +158,6 @@ export class AlldataComponent implements OnInit {
     });
 
     this.departamentos.sort();
-    console.log(this.departamentos);
-    
   }
 
   filtrarMunicipio(departamento: string) {
@@ -175,56 +176,36 @@ export class AlldataComponent implements OnInit {
   }
 
   llenarDatos() {
-    let arregloPequenio: any = [];
-    let arregloGrande: any = [];
     let arregloRecuperados: any = [];
     let arregloFallecidos: any = [];
     let labelGrafica: any = [];
-    let dato1: any = [],
-      dato2: any = [],
-      dato3: any = [],
-      dato4: any = [];
-    let lDato1, lDato2, lDato3, lDato4;
-    let cRecuperados: number = 0,
-      cFallecidos: number = 0;
-    console.log(this.estadosOperacion);
+    let dato1: any = [], dato2: any = [];
+    let lDato1, lDato2;
+    let cRecuperados: number = 0, cFallecidos: number = 0;
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
       for (let i = 0; i < this.departamentos.length; i++) {
-        this.data.map((element: any) => {
-          element.forEach((dep: any) => {
-            if (this.departamentos[i].match(dep[2])) {
-              arregloPequenio.push(dep);
-              if ('INSTALADO'.match(dep[4])) {
+        this.data.map((item: any) => {
+          item.forEach((row: any) => {
+            if (this.departamentos[i].match(row[2])) {
+              if ('INSTALADO'.match(row[4])) {
                 lDato1 = 'INSTALADO';
                 cRecuperados++;
               } else {
-                lDato2 = 'No instalado';
+                lDato2 = 'NO INSTALADO';
                 cFallecidos++;
               }
             }
           });
         });
-        arregloGrande.push(arregloPequenio);
         arregloRecuperados.push(cRecuperados);
         arregloFallecidos.push(cFallecidos);
-        arregloPequenio = [];
         cRecuperados = 0;
         cFallecidos = 0;
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      this.llenarGrafica(
-        labelGrafica,
-        dato1,
-        dato2,
-        dato3,
-        dato4,
-        lDato1,
-        lDato2,
-        lDato3,
-        lDato4
-      );
+      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2)
     } else if (this.opcionDepartamento != 0) {
       this.filtrarMunicipio(this.opcionDepartamento);
       labelGrafica = this.municipios;
@@ -232,9 +213,8 @@ export class AlldataComponent implements OnInit {
         this.data.map((element: any) => {
           element.forEach((mun: any) => {
             if (this.municipios[i].match(mun[1])) {
-              arregloPequenio.push(mun);
               lDato1 = 'INSTALADO';
-              lDato2 = 'INSTALADO';
+              lDato2 = 'NO INSTALADO';
               if ('INSTALADO'.match(mun[4])) {
                 cRecuperados++;
               } else{
@@ -243,65 +223,27 @@ export class AlldataComponent implements OnInit {
             }
           });
         });
-        arregloGrande.push(arregloPequenio);
         arregloRecuperados.push(cRecuperados);
         arregloFallecidos.push(cFallecidos);
-        arregloPequenio = [];
         cRecuperados = 0;
         cFallecidos = 0;
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      this.llenarGrafica(
-        labelGrafica,
-        dato1,
-        dato2,
-        dato3,
-        dato4,
-        lDato1,
-        lDato2,
-        lDato3,
-        lDato4
-      );
+      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2)
     }
   }
 
-  llenarGrafica(
-    labelGrafica: any,
-    dato1: any,
-    dato2: any,
-    dato3: any,
-    dato4: any,
-    lDato1: any,
-    lDato2: any,
-    lDato3: any,
-    lDato4: any
-  ) {
-    if (dato1 != null && dato2 != null) {
+  llenarGrafica(labelGrafica: any, dato1: any, lDato1: any, dato2: any, lDato2: any) {
+    if (dato1 != null) {
       this.barChartData1 = {
         labels: labelGrafica,
         datasets: [
           { data: dato1, label: lDato1 },
           { data: dato2, label: lDato2 },
-        ],
-      };
-    } else if (
-      dato1 != null &&
-      dato2 != null &&
-      dato3 != null &&
-      dato4 != null
-    ) {
-      this.barChartData1 = {
-        labels: labelGrafica,
-        datasets: [
-          { data: dato1, label: lDato1 },
-          { data: dato2, label: lDato2 },
-          { data: dato3, label: lDato3 },
-          { data: dato4, label: lDato4 },
         ],
       };
     }
-
     this.chart?.update();
   }
 
