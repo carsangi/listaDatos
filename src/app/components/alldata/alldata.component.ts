@@ -188,6 +188,11 @@ export class AlldataComponent implements OnInit {
         this.data.map((item: any) => {
           item.forEach((row: any) => {
             if (this.departamentos[i].match(row[2])) {
+ /*              for(let j = 0; j < this.estadosOperacion.length; j++){
+                if (this.estadosOperacion[j].match(row[4])){
+                  
+                }
+              } */
               if ('INSTALADO'.match(row[4])) {
                 lDato1 = 'INSTALADO';
                 cRecuperados++;

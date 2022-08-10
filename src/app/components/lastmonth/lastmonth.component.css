@@ -1,0 +1,89 @@
+#localidad select {
+    width: 180px;
+    height: 40px;
+    margin-top: 10px;
+  }
+
+  mat-form-field {
+    color: #2a2820;
+  }
+
+  mat-label {
+    color: #2a2820;
+  }
+
+  mat-datepicker-toggle {
+    color: #2a2820;
+  }
+
+  mat-form-field:hover {
+    color: #4498EC;
+  }
+
+  mat-datepicker-toggle:hover {
+    color: #4498EC;
+  }
+
+  #buscar {
+    width: 180px;
+    height: 40px;
+    padding: 7px;
+    margin-top: 10px;
+    margin-left: 11px;
+    border: 1px solid #2a2820;
+    border-radius: 5px;
+    color: #2a2820;
+    cursor: pointer;
+  }
+
+  #buscar:hover {
+    border: 1px solid #4498EC;
+    background-color: #4498EC;
+    color: white;
+    cursor: pointer;
+  }
+
+  #buscar label{
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  #fecha {
+    width: 180px;
+    font-size: 14px;
+  }
+
+  .sectionGraficas {
+    margin: auto;
+    padding: auto;
+    border-right: 1px solid #4498EC;
+    background-color: whitesmoke;
+  }
+
+  aside {
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: auto;
+    padding-right: auto;
+    color: #2a2820;
+    margin-left: 0px;
+  }
+
+  aside h1 {
+    font-weight: 500px;
+    font-size: 35px;
+  }
+
+  .radioButton {
+    font-size: medium;
+  }
+
+  .radioButton label {
+    margin-left: 5px;
+    margin-bottom: 8px;
+  }
+
+  .radioButton label:hover {
+    color: #4498EC;
+  }

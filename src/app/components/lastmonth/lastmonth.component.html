@@ -1,1 +1,159 @@
-<p>lastmonth works!</p>
+<div class="main-container">
+    <div class="row">
+      <section class="sectionGraficas col-9">
+        <div class="row">
+            <div style="display: block" id="left-chart" class="mt-5">
+              <h3>Mes</h3>
+              <canvas
+              baseChart
+              [data]="barChartData1"
+              [options]="barChartOptions1"
+              [plugins]="barChartPlugins1"
+              [type]="barChartType1"
+              >
+              </canvas>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div style="display: block" id="left-chart" class="mt-5">
+              <h3>Mes-1</h3>
+              <canvas
+              baseChart
+              [data]="barChartData1"
+              [options]="barChartOptions1"
+              [plugins]="barChartPlugins1"
+              [type]="barChartType1"
+              >
+              </canvas>
+            </div>
+          </div>
+          <div class="col-6">
+            <div style="display: block" id="right-chart" class="mt-5">
+              <h3>Mes-2</h3>
+              <canvas
+              baseChart
+              [data]="barChartData1"
+              [options]="barChartOptions1"
+              [plugins]="barChartPlugins1"
+              [type]="barChartType1"
+              >
+              </canvas>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+              <div style="display: block" id="left-chart" class="mt-5">
+                <h3>Mes-3</h3>
+                <canvas
+                baseChart
+                [data]="barChartData1"
+                [options]="barChartOptions1"
+                [plugins]="barChartPlugins1"
+                [type]="barChartType1"
+                >
+                </canvas>
+              </div>
+            </div>
+            <div class="col-6">
+              <div style="display: block" id="right-chart" class="mt-5">
+                <h3>Mes-4</h3>
+                <canvas
+                baseChart
+                [data]="barChartData1"
+                [options]="barChartOptions1"
+                [plugins]="barChartPlugins1"
+                [type]="barChartType1"
+                >
+                </canvas>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div style="display: block" id="left-chart" class="mt-5">
+                <h3>Mes-5</h3>
+                <canvas
+                baseChart
+                [data]="barChartData1"
+                [options]="barChartOptions1"
+                [plugins]="barChartPlugins1"
+                [type]="barChartType1"
+                >
+                </canvas>
+              </div>
+            </div>
+            <div class="col-6">
+              <div style="display: block" id="right-chart" class="mt-5">
+                <h3>Mes-6</h3>
+                <canvas
+                baseChart
+                [data]="barChartData1"
+                [options]="barChartOptions1"
+                [plugins]="barChartPlugins1"
+                [type]="barChartType1"
+                >
+                </canvas>
+              </div>
+            </div>
+          </div>
+      </section>
+      <aside class="asideFiltros col-3">
+        <h1>Servicios</h1>
+        <div class="row">
+          <div class="radioButton">
+            <input
+              type="radio"
+              id="fechaSolicitud"
+              name="fav_language"
+              value="HTML"
+            />
+            <label for="fechaSolicitud" (click)="getFechas('B')"
+              >Fecha de solicitud</label
+            ><br />
+            <input
+              type="radio"
+              id="fechaActivacion"
+              name="fav_language"
+              value="CSS"
+            />
+            <label for="fechaActivacion" (click)="getFechas('D')"
+              >Fecha de activación</label
+            ><br />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <mat-form-field appearance="standard" id="fecha">
+              <mat-label>Fecha</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input
+                  [(ngModel)]="fechaDesde"
+                  matStartDate
+                  placeholder="D/M/AAAA"
+                />
+                <input
+                  [(ngModel)]="fechaHasta"
+                  matEndDate
+                  placeholder="D/M/AAAA"
+                />
+              </mat-date-range-input>
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <i class="bi bi-search" id="buscar" (click)="buscar()">
+            <label for="">Buscar</label>
+          </i>
+        </div>
+      </aside>
+    </div>
+  </div>
+  
+  
