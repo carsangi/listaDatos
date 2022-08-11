@@ -1,10 +1,18 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ThemePalette } from '@angular/material/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ConsultaAPIService } from '../../services/consulta-api.service';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
 
 @Component({
   selector: 'app-alldata',
@@ -179,20 +187,33 @@ export class AlldataComponent implements OnInit {
     let arregloRecuperados: any = [];
     let arregloFallecidos: any = [];
     let labelGrafica: any = [];
-    let dato1: any = [], dato2: any = [];
+    let datos: Array<number> = [];
+    let sumWithInitial
+    datos.length = this.estadosOperacion.length;
+    datos.fill(0);
+    console.log('datos antes: ' + datos);
+    let dato1: any = [],
+      dato2: any = [];
     let lDato1, lDato2;
-    let cRecuperados: number = 0, cFallecidos: number = 0;
+    let cRecuperados: number = 0,
+      cFallecidos: number = 0;
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
       for (let i = 0; i < this.departamentos.length; i++) {
         this.data.map((item: any) => {
           item.forEach((row: any) => {
             if (this.departamentos[i].match(row[2])) {
- /*              for(let j = 0; j < this.estadosOperacion.length; j++){
-                if (this.estadosOperacion[j].match(row[4])){
-                  
+              for (let j = 0; j < this.estadosOperacion.length; j++) {
+                if (this.estadosOperacion[j]!= undefined){
+                  if (this.estadosOperacion[j].match(row[4])) {
+                    datos[j]++;
+                    sumWithInitial = datos.reduce(
+                      (previousValue, currentValue) => previousValue + currentValue,
+                      0
+                    );
+                  }
                 }
-              } */
+              }
               if ('INSTALADO'.match(row[4])) {
                 lDato1 = 'INSTALADO';
                 cRecuperados++;
@@ -210,7 +231,9 @@ export class AlldataComponent implements OnInit {
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2)
+      console.log('datos antes: ' + datos);
+      console.log('datos antes: ' + sumWithInitial);
+      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2);
     } else if (this.opcionDepartamento != 0) {
       this.filtrarMunicipio(this.opcionDepartamento);
       labelGrafica = this.municipios;
@@ -222,7 +245,7 @@ export class AlldataComponent implements OnInit {
               lDato2 = 'NO INSTALADO';
               if ('INSTALADO'.match(mun[4])) {
                 cRecuperados++;
-              } else{
+              } else {
                 cFallecidos++;
               }
             }
@@ -235,11 +258,17 @@ export class AlldataComponent implements OnInit {
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2)
+      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2);
     }
   }
 
-  llenarGrafica(labelGrafica: any, dato1: any, lDato1: any, dato2: any, lDato2: any) {
+  llenarGrafica(
+    labelGrafica: any,
+    dato1: any,
+    lDato1: any,
+    dato2: any,
+    lDato2: any
+  ) {
     if (dato1 != null) {
       this.barChartData1 = {
         labels: labelGrafica,
@@ -317,4 +346,43 @@ export class AlldataComponent implements OnInit {
   };
   public barChartType3: ChartType = 'bar';
   public barChartPlugins3 = [DataLabelsPlugin];
+
+  /* check box */
+
+  task: Task = {
+    name: 'Indeterminate',
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      { name: 'Primary', completed: false, color: 'primary' },
+      { name: 'Accent', completed: false, color: 'accent' },
+      { name: 'Warn', completed: false, color: 'warn' },
+    ],
+  };
+
+  allComplete: boolean = false;
+
+  updateAllComplete() {
+    this.allComplete =
+      this.task.subtasks != null &&
+      this.task.subtasks.every((t) => t.completed);
+  }
+
+  someComplete(): boolean {
+    if (this.task.subtasks == null) {
+      return false;
+    }
+    return (
+      this.task.subtasks.filter((t) => t.completed).length > 0 &&
+      !this.allComplete
+    );
+  }
+
+  setAll(completed: boolean) {
+    this.allComplete = completed;
+    if (this.task.subtasks == null) {
+      return;
+    }
+    this.task.subtasks.forEach((t) => (t.completed = completed));
+  }
 }

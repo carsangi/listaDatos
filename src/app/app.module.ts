@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConsultaAPIService } from './services/consulta-api.service'
 import { NgChartsModule } from 'ng2-charts';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,6 +36,7 @@ import { FooterComponent } from './components/footer/footer.component';
     MatDatepickerModule,
     MatMomentDateModule,
     MatFormFieldModule,
+    MatCheckboxModule,
   ],
   providers: [
     ConsultaAPIService,
