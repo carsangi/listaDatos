@@ -134,11 +134,13 @@ export class AlldataComponent implements OnInit {
     let aux: any = [];
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
-        aux.push(element2[4]);
+        if(element2[4] != undefined){
+          aux.push(element2[4]);
+        }
       });
     });
     this.estadosOperacion = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item) === index;
+      return aux.indexOf(item.trim()) === index;
     });
     this.estadosOperacion.sort();
   }
@@ -156,15 +158,16 @@ export class AlldataComponent implements OnInit {
   }
   filtrarDepartamento() {
     let aux: any = [];
+    let aux2: any = [];
+
     this.data.map((element: any) => {
       element.forEach((element2: any) => {
         aux.push(element2[2]);
       });
     });
     this.departamentos = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item) === index;
+      return aux.indexOf(item.trim()) === index;
     });
-
     this.departamentos.sort();
   }
 
@@ -187,10 +190,9 @@ export class AlldataComponent implements OnInit {
     let arregloRecuperados: any = [];
     let arregloFallecidos: any = [];
     let labelGrafica: any = [];
-    let datos: Array<number> = [];
+    let datos=Array(this.estadosOperacion.length).fill(0);
     let sumWithInitial
-    datos.length = this.estadosOperacion.length;
-    datos.fill(0);
+    console.log(this.estadosOperacion)
     console.log('datos antes: ' + datos);
     let dato1: any = [],
       dato2: any = [];
@@ -203,22 +205,17 @@ export class AlldataComponent implements OnInit {
         this.data.map((item: any) => {
           item.forEach((row: any) => {
             if (this.departamentos[i].match(row[2])) {
-              for (let j = 0; j < this.estadosOperacion.length; j++) {
-                if (this.estadosOperacion[j]!= undefined){
+              for (let j = 0; j < datos.length; j++) {
                   if (this.estadosOperacion[j].match(row[4])) {
-                    datos[j]++;
-                    sumWithInitial = datos.reduce(
-                      (previousValue, currentValue) => previousValue + currentValue,
-                      0
-                    );
-                  }
+                    datos[j]++;        
                 }
               }
-              if ('INSTALADO'.match(row[4])) {
-                lDato1 = 'INSTALADO';
+              let palabra = this.estadosOperacion[12]
+              if (palabra.match(row[4])) {
+                lDato1 = palabra.toString();
                 cRecuperados++;
               } else {
-                lDato2 = 'NO INSTALADO';
+                lDato2 = `NO ${palabra.toString()}`;
                 cFallecidos++;
               }
             }
@@ -231,8 +228,9 @@ export class AlldataComponent implements OnInit {
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      console.log('datos antes: ' + datos);
-      console.log('datos antes: ' + sumWithInitial);
+      console.log('datos despues: ' + datos);
+      sumWithInitial = datos.reduce((previousValue, currentValue) => previousValue + currentValue,0);
+      console.log('datos despues: ' + sumWithInitial);
       this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2);
     } else if (this.opcionDepartamento != 0) {
       this.filtrarMunicipio(this.opcionDepartamento);
