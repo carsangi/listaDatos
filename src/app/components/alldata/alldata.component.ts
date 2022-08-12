@@ -214,7 +214,6 @@ export class AlldataComponent implements OnInit {
               for (let j = 0; j < contadores.length; j++) {
                 if (this.departamentos[i] === (row[2]) && this.estadosOperacion[j] === row[4]) {
                   contadores[j]++;
-                  
                 }
               }
             }  
@@ -259,18 +258,17 @@ export class AlldataComponent implements OnInit {
 
   crearObjetosDatos(labelGrafica: any, datos: any, lDatos: any){
     let ArregloObjeto: Array<Object> = []
+    let ArregloDatos: Array<Object> = []
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
-        let objeto = {data: datos[j][i], label: lDatos[i]};
-        ArregloObjeto.push(objeto)
+        let aux = datos[j][i]
+        ArregloDatos.push(aux)
       }
+      let objeto = {data: ArregloDatos, label: lDatos[i]};
+      ArregloObjeto.push(objeto)
+      ArregloDatos = [];
       
     }
-      /* datos.forEach((element2: any, index: string | number) => {
-          let objeto = {data: element2, label: lDatos};
-          ArregloObjeto.push(objeto)
-      }); */
-
     this.llenarGrafica(labelGrafica, ArregloObjeto);
     console.log(ArregloObjeto)
   }
@@ -278,15 +276,7 @@ export class AlldataComponent implements OnInit {
   llenarGrafica(labelGrafica: any, dataSet: Array<object>) {
       this.barChartData1 = {
         labels: labelGrafica,
-        datasets:  [ 
-          {data:[23,119] ,label:"Vacio"},
-          {data:[2,4] ,label:"CANCELADO"},
-          {data:[0,1] ,label:"CLIENTE PIDE TIEMPO"},
-          {data:[0,4] ,label:"DEUDOR"},
-          {data:[47,108] ,label:"INSTALADO"},
-          {data:[2,2] ,label:"REPETIDA"},
-          {data:[2,4] ,label:"SIN COBERTURA"},
-        ], 
+        datasets: dataSet,
       };
 
     this.chart?.update();
