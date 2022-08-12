@@ -124,7 +124,7 @@ export class AlldataComponent implements OnInit {
             this.filtrarEstadoOperacion();
             this.filtrarEstadoRetiro();
             this.filtrarDepartamento();
-            this.llenarDatos();
+            this.llenarContador();
           }
         });
     }
@@ -134,7 +134,9 @@ export class AlldataComponent implements OnInit {
     let aux: any = [];
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
-        if(element2[4] != undefined){
+        if(element2[4] === undefined){
+          aux.push(' ');
+        }else{
           aux.push(element2[4]);
         }
       });
@@ -186,52 +188,45 @@ export class AlldataComponent implements OnInit {
     this.municipios.sort();
   }
 
-  llenarDatos() {
+  llenarContador() {
     let arregloRecuperados: any = [];
     let arregloFallecidos: any = [];
     let labelGrafica: any = [];
-    let datos=Array(this.estadosOperacion.length).fill(0);
-    let sumWithInitial
-    console.log(this.estadosOperacion)
-    console.log('datos antes: ' + datos);
+    let lDatos = this.estadosOperacion;
+    let datos = Array(this.departamentos.length)
+    let contadores=Array(this.estadosOperacion.length);
     let dato1: any = [],
-      dato2: any = [];
+      dato2: any = [],
+      contadorundefine = 0;
     let lDato1, lDato2;
     let cRecuperados: number = 0,
       cFallecidos: number = 0;
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
       for (let i = 0; i < this.departamentos.length; i++) {
+        contadores.length = this.estadosOperacion.length;
+        contadores.fill(0);
         this.data.map((item: any) => {
           item.forEach((row: any) => {
-            if (this.departamentos[i].match(row[2])) {
-              for (let j = 0; j < datos.length; j++) {
-                  if (this.estadosOperacion[j].match(row[4])) {
-                    datos[j]++;        
+            if (this.departamentos[i] === (row[2]) && row[4] == undefined ){
+              contadorundefine++;
+            }else{
+              for (let j = 0; j < contadores.length; j++) {
+                if (this.departamentos[i] === (row[2]) && this.estadosOperacion[j] === row[4]) {
+                  contadores[j]++;
+                  
                 }
               }
-              let palabra = this.estadosOperacion[12]
-              if (palabra.match(row[4])) {
-                lDato1 = palabra.toString();
-                cRecuperados++;
-              } else {
-                lDato2 = `NO ${palabra.toString()}`;
-                cFallecidos++;
-              }
-            }
+            }  
           });
         });
-        arregloRecuperados.push(cRecuperados);
-        arregloFallecidos.push(cFallecidos);
-        cRecuperados = 0;
-        cFallecidos = 0;
+        if(contadorundefine > 0){
+          contadores[0]= contadores[0] + contadorundefine;
+          contadorundefine = 0;
+        } 
+        datos[i]=contadores;
+        contadores = []
       }
-      dato1 = arregloRecuperados;
-      dato2 = arregloFallecidos;
-      console.log('datos despues: ' + datos);
-      sumWithInitial = datos.reduce((previousValue, currentValue) => previousValue + currentValue,0);
-      console.log('datos despues: ' + sumWithInitial);
-      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2);
     } else if (this.opcionDepartamento != 0) {
       this.filtrarMunicipio(this.opcionDepartamento);
       labelGrafica = this.municipios;
@@ -256,26 +251,44 @@ export class AlldataComponent implements OnInit {
       }
       dato1 = arregloRecuperados;
       dato2 = arregloFallecidos;
-      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2);
+      
     }
+    this.crearObjetosDatos(labelGrafica, datos, lDatos);
+    console.log(datos)
   }
 
-  llenarGrafica(
-    labelGrafica: any,
-    dato1: any,
-    lDato1: any,
-    dato2: any,
-    lDato2: any
-  ) {
-    if (dato1 != null) {
+  crearObjetosDatos(labelGrafica: any, datos: any, lDatos: any){
+    let ArregloObjeto: Array<Object> = []
+    for (let i = 0; i < lDatos.length; i++) {
+      for (let j = 0; j < datos.length; j++) {
+        let objeto = {data: datos[j][i], label: lDatos[i]};
+        ArregloObjeto.push(objeto)
+      }
+      
+    }
+      /* datos.forEach((element2: any, index: string | number) => {
+          let objeto = {data: element2, label: lDatos};
+          ArregloObjeto.push(objeto)
+      }); */
+
+    this.llenarGrafica(labelGrafica, ArregloObjeto);
+    console.log(ArregloObjeto)
+  }
+
+  llenarGrafica(labelGrafica: any, dataSet: Array<object>) {
       this.barChartData1 = {
         labels: labelGrafica,
-        datasets: [
-          { data: dato1, label: lDato1 },
-          { data: dato2, label: lDato2 },
-        ],
+        datasets:  [ 
+          {data:[23,119] ,label:"Vacio"},
+          {data:[2,4] ,label:"CANCELADO"},
+          {data:[0,1] ,label:"CLIENTE PIDE TIEMPO"},
+          {data:[0,4] ,label:"DEUDOR"},
+          {data:[47,108] ,label:"INSTALADO"},
+          {data:[2,2] ,label:"REPETIDA"},
+          {data:[2,4] ,label:"SIN COBERTURA"},
+        ], 
       };
-    }
+
     this.chart?.update();
   }
 
