@@ -197,7 +197,7 @@ export class AlldataComponent implements OnInit {
     let contadores=Array(this.estadosOperacion.length);
     let dato1: any = [],
       dato2: any = [],
-      contadorundefine = 0;
+      contadorVacios = 0;
     let lDato1, lDato2;
     let cRecuperados: number = 0,
       cFallecidos: number = 0;
@@ -209,7 +209,7 @@ export class AlldataComponent implements OnInit {
         this.data.map((item: any) => {
           item.forEach((row: any) => {
             if (this.departamentos[i] === (row[2]) && row[4] == undefined ){
-              contadorundefine++;
+              contadorVacios++;
             }else{
               for (let j = 0; j < contadores.length; j++) {
                 if (this.departamentos[i] === (row[2]) && this.estadosOperacion[j] === row[4]) {
@@ -219,9 +219,9 @@ export class AlldataComponent implements OnInit {
             }  
           });
         });
-        if(contadorundefine > 0){
-          contadores[0]= contadores[0] + contadorundefine;
-          contadorundefine = 0;
+        if(contadorVacios > 0){
+          contadores[0]= contadores[0] + contadorVacios;
+          contadorVacios = 0;
         } 
         datos[i]=contadores;
         contadores = []
@@ -230,27 +230,29 @@ export class AlldataComponent implements OnInit {
       this.filtrarMunicipio(this.opcionDepartamento);
       labelGrafica = this.municipios;
       for (let i = 0; i < this.municipios.length; i++) {
-        this.data.map((element: any) => {
-          element.forEach((mun: any) => {
-            if (this.municipios[i].match(mun[1])) {
-              lDato1 = 'INSTALADO';
-              lDato2 = 'NO INSTALADO';
-              if ('INSTALADO'.match(mun[4])) {
-                cRecuperados++;
-              } else {
-                cFallecidos++;
+        contadores.length = this.estadosOperacion.length;
+        contadores.fill(0);
+        this.data.map((item: any) => {
+          item.forEach((row: any) => {
+            console.log(row[4])
+            if (this.municipios[i] === (row[2]) && (row[4] == undefined || row[4] == '')){
+              contadorVacios++;
+            }else{
+              for (let j = 0; j < contadores.length; j++) {
+                if (this.municipios[i] === (row[1]) && this.estadosOperacion[j] === row[4]) {
+                  contadores[j]++;
+                }
               }
             }
           });
         });
-        arregloRecuperados.push(cRecuperados);
-        arregloFallecidos.push(cFallecidos);
-        cRecuperados = 0;
-        cFallecidos = 0;
-      }
-      dato1 = arregloRecuperados;
-      dato2 = arregloFallecidos;
-      
+        if(contadorVacios > 0){
+          contadores[0]= contadores[0] + contadorVacios;
+          contadorVacios = 0;
+        } 
+        datos[i]=contadores;
+        contadores = []
+      }      
     }
     this.crearObjetosDatos(labelGrafica, datos, lDatos);
     console.log(datos)
@@ -264,13 +266,17 @@ export class AlldataComponent implements OnInit {
         let aux = datos[j][i]
         ArregloDatos.push(aux)
       }
-      let objeto = {data: ArregloDatos, label: lDatos[i]};
-      ArregloObjeto.push(objeto)
-      ArregloDatos = [];
-      
-    }
+        if(lDatos[i] == ''){
+          let objeto = {data: ArregloDatos, label: "SIN ESTADO DE OPERACION"};        
+          ArregloObjeto.push(objeto)
+          ArregloDatos = [];
+        }else{
+          let objeto = {data: ArregloDatos, label: lDatos[i]};
+          ArregloObjeto.push(objeto)
+          ArregloDatos = [];
+        }
+      }
     this.llenarGrafica(labelGrafica, ArregloObjeto);
-    console.log(ArregloObjeto)
   }
 
   llenarGrafica(labelGrafica: any, dataSet: Array<object>) {
