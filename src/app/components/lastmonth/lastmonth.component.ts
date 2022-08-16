@@ -21,6 +21,8 @@ export class LastmonthComponent implements OnInit {
   data: any;
   departamentos: any;
   opcionDepartamento: any = 0;
+  municipios: any;
+  estadosOperacion: any;
 
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
@@ -109,10 +111,27 @@ export class LastmonthComponent implements OnInit {
             /* his.filtrarEstadoOperacion();
             this.filtrarEstadoRetiro(); */
             this.filtrarDepartamento();
-            this.llenarDatos();
+            this.llenarContador();
           }
         });
     }
+  }
+
+  filtrarEstadoOperacion() {
+    let aux: any = [];
+    this.data.forEach((element: any) => {
+      element.forEach((element2: any) => {
+        if(element2[4] === undefined){
+          aux.push(' ');
+        }else{
+          aux.push(element2[4]);
+        }
+      });
+    });
+    this.estadosOperacion = aux.filter((item: any, index: any) => {
+      return aux.indexOf(item.trim()) === index;
+    });
+    this.estadosOperacion.sort();
   }
 
   filtrarDepartamento() {
@@ -129,63 +148,120 @@ export class LastmonthComponent implements OnInit {
     this.departamentos.sort();
   }
 
-  llenarDatos(){
+  filtrarMunicipio(departamento: string) {
+    let aux: any = [];
+    this.data.forEach((element: any) => {
+      element.forEach((element2: any) => {
+        if (element2[2] == departamento) {
+          aux.push(element2[1]);
+        }
+      });
+    });
+    this.municipios = aux.filter((item: any, index: any) => {
+      return aux.indexOf(item) === index;
+    });
+    this.municipios.sort();
+  }
+
+  llenarContador() {
     let arregloRecuperados: any = [];
     let arregloFallecidos: any = [];
     let labelGrafica: any = [];
-    let dato1: any = [], dato2: any = [];
+    let lDatos = this.estadosOperacion;
+    let datos = Array(this.departamentos.length)
+    let contadores=Array(this.estadosOperacion.length);
+    let dato1: any = [],
+      dato2: any = [],
+      contadorVacios = 0;
     let lDato1, lDato2;
-    let cRecuperados: number = 0, cFallecidos: number = 0;
+    let cRecuperados: number = 0,
+      cFallecidos: number = 0;
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
       for (let i = 0; i < this.departamentos.length; i++) {
+        contadores.length = this.estadosOperacion.length;
+        contadores.fill(0);
         this.data.map((item: any) => {
           item.forEach((row: any) => {
-            if (this.departamentos[i].match(row[2])) {
- /*              for(let j = 0; j < this.estadosOperacion.length; j++){
-                if (this.estadosOperacion[j].match(row[4])){
-                  
+            if (this.departamentos[i] === (row[2]) && row[4] == undefined ){
+              contadorVacios++;
+            }else{
+              for (let j = 0; j < contadores.length; j++) {
+                if (this.departamentos[i] === (row[2]) && this.estadosOperacion[j] === row[4]) {
+                  contadores[j]++;
                 }
-              } */
-              if ('INSTALADO'.match(row[4])) {
-                lDato1 = 'INSTALADO';
-                cRecuperados++;
-              } else {
-                lDato2 = 'NO INSTALADO';
-                cFallecidos++;
+              }
+            }  
+          });
+        });
+        if(contadorVacios > 0){
+          contadores[0]= contadores[0] + contadorVacios;
+          contadorVacios = 0;
+        } 
+        datos[i]=contadores;
+        contadores = []
+      }
+    } else if (this.opcionDepartamento != 0) {
+      this.filtrarMunicipio(this.opcionDepartamento);
+      labelGrafica = this.municipios;
+      for (let i = 0; i < this.municipios.length; i++) {
+        contadores.length = this.estadosOperacion.length;
+        contadores.fill(0);
+        this.data.map((item: any) => {
+          item.forEach((row: any) => {
+            console.log(row[4])
+            if (this.municipios[i] === (row[2]) && (row[4] == undefined || row[4] == '')){
+              contadorVacios++;
+            }else{
+              for (let j = 0; j < contadores.length; j++) {
+                if (this.municipios[i] === (row[1]) && this.estadosOperacion[j] === row[4]) {
+                  contadores[j]++;
+                }
               }
             }
           });
         });
-        arregloRecuperados.push(cRecuperados);
-        arregloFallecidos.push(cFallecidos);
-        cRecuperados = 0;
-        cFallecidos = 0;
-      }
-      dato1 = arregloRecuperados;
-      dato2 = arregloFallecidos;
-      this.llenarGrafica(labelGrafica, dato1, lDato1, dato2, lDato2)
-    } 
+        if(contadorVacios > 0){
+          contadores[0]= contadores[0] + contadorVacios;
+          contadorVacios = 0;
+        } 
+        datos[i]=contadores;
+        contadores = []
+      }      
+    }
+    this.crearObjetoDataset(labelGrafica, datos, lDatos);
+    console.log(datos)
   }
 
-  llenarGrafica(
-    labelGrafica: any,
-    dato1: any,
-    lDato1: any,
-    dato2: any,
-    lDato2: any
-  ) {
-    if (dato1 != null) {
-      this.barChartData1 = {
-        labels: labelGrafica,
-        datasets: [
-          { data: dato1, label: lDato1 },
-          { data: dato2, label: lDato2 },
-        ],
-      };
-    }
-    this.chart?.update();
+  crearObjetoDataset(labelGrafica: any, datos: any, lDatos: any){
+    let dataSet: Array<Object> = []
+    let ArregloDatos: Array<Object> = []
+    for (let i = 0; i < lDatos.length; i++) {
+      for (let j = 0; j < datos.length; j++) {
+        let aux = datos[j][i]
+        ArregloDatos.push(aux)
+      }
+        if(lDatos[i] == ''){
+          let objeto = {data: ArregloDatos, label: "SIN ESTADO DE OPERACION"};        
+          dataSet.push(objeto)
+          ArregloDatos = [];
+        }else{
+          let objeto = {data: ArregloDatos, label: lDatos[i]};
+          dataSet.push(objeto)
+          ArregloDatos = [];
+        }
+      }
+    this.llenarGrafica(labelGrafica, dataSet);
   }
+
+  llenarGrafica(labelGrafica: any, dataSet: Array<object>) {
+    this.barChartData1 = {
+      labels: labelGrafica,
+      datasets: dataSet,
+    };
+
+  this.chart?.update();
+}
 
   public barChartOptions1: ChartConfiguration['options'] = {
     responsive: true,
