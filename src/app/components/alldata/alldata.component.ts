@@ -7,11 +7,11 @@ import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 
-export interface Task {
-  name: string;
+export interface Estado {
+  nombre: string;
   completed: boolean;
   color: ThemePalette;
-  subtasks?: Task[];
+  subEstados?: Array<Estado>;
 }
 
 @Component({
@@ -37,10 +37,11 @@ export class AlldataComponent implements OnInit {
   estadosOperacion: any = [];
   estadosRetiro: any = [];
   opcionFiltrado: any;
+  categoria: any;
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
   ngOnInit(): void {}
-
+  
   getFechas(column: string) {
     this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
       this.columnDate = res;
@@ -81,6 +82,7 @@ export class AlldataComponent implements OnInit {
       }
     }
     this.divirArreglo(arregloFechas);
+    arregloFechas = []
   }
 
   divirArreglo(arregloFechas: Array<any>) {
@@ -108,6 +110,10 @@ export class AlldataComponent implements OnInit {
       index++;
     });
     this.consultarDatos(matrizFecha);
+    matrizFecha = [];
+    aux = [];
+    rowAnterior = 0;
+
   }
 
   consultarDatos(matrizFecha: Array<any>) {
@@ -134,8 +140,8 @@ export class AlldataComponent implements OnInit {
     let aux: any = [];
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
-        if(element2[4] === undefined){
-          aux.push(' ');
+        if(element2[4] === undefined || element2[4] == ' ' || element2[4] === ''){
+          aux.push('');
         }else{
           aux.push(element2[4]);
         }
@@ -146,11 +152,16 @@ export class AlldataComponent implements OnInit {
     });
     this.estadosOperacion.sort();
   }
+  
   filtrarEstadoRetiro() {
     let aux: any = [];
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
-        aux.push(element2[5]);
+        if(element2[5] === undefined || element2[5] == ' ' || element2[5] === ''){
+          aux.push('');
+        }else{
+          aux.push(element2[5]);
+        }
       });
     });
     this.estadosRetiro = aux.filter((item: any, index: any) => {
@@ -189,18 +200,12 @@ export class AlldataComponent implements OnInit {
   }
 
   llenarContador() {
-    let arregloRecuperados: any = [];
-    let arregloFallecidos: any = [];
     let labelGrafica: any = [];
     let lDatos = this.estadosOperacion;
     let datos = Array(this.departamentos.length)
     let contadores=Array(this.estadosOperacion.length);
-    let dato1: any = [],
-      dato2: any = [],
-      contadorVacios = 0;
-    let lDato1, lDato2;
-    let cRecuperados: number = 0,
-      cFallecidos: number = 0;
+    let contadorVacios = 0, contador=0;
+
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
       for (let i = 0; i < this.departamentos.length; i++) {
@@ -219,6 +224,8 @@ export class AlldataComponent implements OnInit {
             }  
           });
         });
+                  
+        
         if(contadorVacios > 0){
           contadores[0]= contadores[0] + contadorVacios;
           contadorVacios = 0;
@@ -234,8 +241,7 @@ export class AlldataComponent implements OnInit {
         contadores.fill(0);
         this.data.map((item: any) => {
           item.forEach((row: any) => {
-            console.log(row[4])
-            if (this.municipios[i] === (row[2]) && (row[4] == undefined || row[4] == '')){
+            if (this.municipios[i] === (row[1]) && (row[4] == undefined || row[4] == '')){
               contadorVacios++;
             }else{
               for (let j = 0; j < contadores.length; j++) {
@@ -246,6 +252,7 @@ export class AlldataComponent implements OnInit {
             }
           });
         });
+        
         if(contadorVacios > 0){
           contadores[0]= contadores[0] + contadorVacios;
           contadorVacios = 0;
@@ -254,29 +261,33 @@ export class AlldataComponent implements OnInit {
         contadores = []
       }      
     }
-    this.crearObjetosDatos(labelGrafica, datos, lDatos);
-    console.log(datos)
+    this.crearObjetoDataset(labelGrafica, datos, lDatos);
   }
 
-  crearObjetosDatos(labelGrafica: any, datos: any, lDatos: any){
-    let ArregloObjeto: Array<Object> = []
+  crearObjetoDataset(labelGrafica: any, datos: any, lDatos: any){
+    this.crearSubEstados;
+    let dataSet: Array<Object> = []
     let ArregloDatos: Array<Object> = []
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
         let aux = datos[j][i]
-        ArregloDatos.push(aux)
+        if(aux === undefined){
+          ArregloDatos.push(0)
+        }else{
+          ArregloDatos.push(aux)   
+        }
       }
         if(lDatos[i] == ''){
           let objeto = {data: ArregloDatos, label: "SIN ESTADO DE OPERACION"};        
-          ArregloObjeto.push(objeto)
+          dataSet.push(objeto)
           ArregloDatos = [];
         }else{
           let objeto = {data: ArregloDatos, label: lDatos[i]};
-          ArregloObjeto.push(objeto)
+          dataSet.push(objeto)
           ArregloDatos = [];
         }
       }
-    this.llenarGrafica(labelGrafica, ArregloObjeto);
+    this.llenarGrafica(labelGrafica, dataSet);
   }
 
   llenarGrafica(labelGrafica: any, dataSet: Array<object>) {
@@ -284,7 +295,7 @@ export class AlldataComponent implements OnInit {
         labels: labelGrafica,
         datasets: dataSet,
       };
-
+      this.crearSubEstados()
     this.chart?.update();
   }
 
@@ -355,41 +366,54 @@ export class AlldataComponent implements OnInit {
   public barChartPlugins3 = [DataLabelsPlugin];
 
   /* check box */
-
-  task: Task = {
-    name: 'Indeterminate',
+crearSubEstados(): Array<Estado>{
+  let subestado:any = []
+  this.opcionFiltrado = this.estadosOperacion;
+  this.opcionFiltrado.forEach((element: string) => {
+    if(element == ''){
+      let objeto: Estado = {nombre: "SIN ESTADO DE OPERACION", completed: false, color: 'primary'};        
+      subestado.push(objeto)
+      
+    }else{
+      let objeto: Estado = {nombre: element, completed: false, color: 'accent'};        
+      subestado.push(objeto)
+    }
+    console.log(subestado)
+    return subestado;
+  });
+  return [];
+}
+  estados: Estado = {
+    nombre: 'Indeterminate',
     completed: false,
     color: 'primary',
-    subtasks: [
-      { name: 'Primary', completed: false, color: 'primary' },
-      { name: 'Accent', completed: false, color: 'accent' },
-      { name: 'Warn', completed: false, color: 'warn' },
-    ],
+    subEstados: this.crearSubEstados(),
+    
   };
 
   allComplete: boolean = false;
 
   updateAllComplete() {
     this.allComplete =
-      this.task.subtasks != null &&
-      this.task.subtasks.every((t) => t.completed);
+      this.estados.subEstados != null &&
+      this.estados.subEstados.every((t) => t.completed);
   }
 
   someComplete(): boolean {
-    if (this.task.subtasks == null) {
+    if (this.estados.subEstados == null) {
       return false;
     }
     return (
-      this.task.subtasks.filter((t) => t.completed).length > 0 &&
+      this.estados.subEstados.filter((t) => t.completed).length > 0 &&
       !this.allComplete
     );
   }
 
   setAll(completed: boolean) {
     this.allComplete = completed;
-    if (this.task.subtasks == null) {
+    if (this.estados.subEstados == null) {
       return;
     }
-    this.task.subtasks.forEach((t) => (t.completed = completed));
+    this.estados.subEstados.forEach((t) => (t.completed = completed));
   }
 }

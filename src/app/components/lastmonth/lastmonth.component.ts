@@ -23,6 +23,13 @@ export class LastmonthComponent implements OnInit {
   opcionDepartamento: any = 0;
   municipios: any;
   estadosOperacion: any;
+  mes:String = '';
+  mes1:String  = ''; 
+  mes2:String  = '' ; 
+  mes3:String  = '' ; 
+  mes4:String  = '' ; 
+  mes5:String  = ''; 
+  mes6:String = '';
 
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
@@ -41,7 +48,14 @@ export class LastmonthComponent implements OnInit {
   }
   filtrarFechas(fechaDesde: Moment, fechaHasta: Moment) {
     let arregloFechas: any = [];
-    let fechaLastMonth = fechaDesde.subtract(6, 'M');
+    this.mes = fechaDesde.format('MMMM');
+    this.mes1 =fechaDesde.subtract(1,'M').format('MMMM');
+    this.mes2 =fechaDesde.subtract(1,'M').format('MMMM');
+    this.mes3 =fechaDesde.subtract(1,'M').format('MMMM');
+    this.mes4 =fechaDesde.subtract(1,'M').format('MMMM');
+    this.mes5 =fechaDesde.subtract(1,'M').format('MMMM');
+    this.mes6 =fechaDesde.subtract(1,'M').format('MMMM');
+    let fechaLastMonth = fechaDesde;
     let diaA: number = fechaLastMonth.date();
     let mesA: number = fechaLastMonth.month();
     let añoA: number = fechaLastMonth.year();
@@ -108,10 +122,11 @@ export class LastmonthComponent implements OnInit {
         .subscribe((res) => {
           this.data.push(res);
           if (i == matrizFecha.length - 1) {
-            /* his.filtrarEstadoOperacion();
-            this.filtrarEstadoRetiro(); */
+            this.filtrarEstadoOperacion();
+            //this.filtrarEstadoRetiro();
             this.filtrarDepartamento();
             this.llenarContador();
+            
           }
         });
     }
@@ -144,7 +159,6 @@ export class LastmonthComponent implements OnInit {
     this.departamentos = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
     });
-
     this.departamentos.sort();
   }
 
@@ -209,8 +223,7 @@ export class LastmonthComponent implements OnInit {
         contadores.fill(0);
         this.data.map((item: any) => {
           item.forEach((row: any) => {
-            console.log(row[4])
-            if (this.municipios[i] === (row[2]) && (row[4] == undefined || row[4] == '')){
+            if (this.municipios[i] === (row[1]) && (row[4] == undefined || row[4] == '')){
               contadorVacios++;
             }else{
               for (let j = 0; j < contadores.length; j++) {
@@ -230,7 +243,6 @@ export class LastmonthComponent implements OnInit {
       }      
     }
     this.crearObjetoDataset(labelGrafica, datos, lDatos);
-    console.log(datos)
   }
 
   crearObjetoDataset(labelGrafica: any, datos: any, lDatos: any){

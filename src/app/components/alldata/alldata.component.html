@@ -13,7 +13,7 @@
           </canvas>
         </div>
       </div>
-      <div class="row">
+<!--       <div class="row">
         <div class="col-6">
           <div style="display: block" id="left-chart" class="mt-5">
             <canvas
@@ -37,8 +37,8 @@
             >
             </canvas>
           </div>
-        </div>
-      </div>
+        </div> 
+      </div>-->
     </section>
     <aside class="asideFiltros col-3">
       <h1>Servicios</h1>
@@ -114,30 +114,28 @@
 
 
         
-        <span class="example-list-section">
+        <!-- <span class="example-list-section">
           <mat-checkbox
             class="example-margin"
             [checked]="allComplete"
-            [color]="task.color"
+            [color]="estados.color"
             [indeterminate]="someComplete()"
             (change)="setAll($event.checked)"
           >
-            {{ task.name }}
           </mat-checkbox>
         </span>
         <span class="example-list-section">
           <ul>
-            <li *ngFor="let subtask of task.subtasks">
+            <li *ngFor="let subEstado of estados.subEstados" >
               <mat-checkbox
-                [(ngModel)]="subtask.completed"
-                [color]="subtask.color"
+                [(ngModel)]="subEstado.completed"
+                [color]="subEstado.color"
                 (ngModelChange)="updateAllComplete()"
               >
-                {{ subtask.name }}
               </mat-checkbox>
             </li>
           </ul>
-        </span>
+        </span> -->
       </section>
     </aside>
   </div>
