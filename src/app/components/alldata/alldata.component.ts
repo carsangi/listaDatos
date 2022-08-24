@@ -38,6 +38,7 @@ export class AlldataComponent implements OnInit {
   estadosRetiro: any = [];
   opcionFiltrado: any;
   categoria: any;
+  stringDepartamento: string = "";
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
   ngOnInit(): void {}
@@ -204,7 +205,7 @@ export class AlldataComponent implements OnInit {
     let lDatos = this.estadosOperacion;
     let datos = Array(this.departamentos.length)
     let contadores=Array(this.estadosOperacion.length);
-    let contadorVacios = 0, contador=0;
+    let contadorVacios = 0;
 
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
@@ -261,10 +262,11 @@ export class AlldataComponent implements OnInit {
         contadores = []
       }      
     }
-    this.crearObjetoDataset(labelGrafica, datos, lDatos);
+    this.crearObjetoDatasetMainChart(labelGrafica, datos, lDatos);
+    this.crearObjetoDataSetTotal(labelGrafica, datos, lDatos);
   }
 
-  crearObjetoDataset(labelGrafica: any, datos: any, lDatos: any){
+  crearObjetoDatasetMainChart(labelGrafica: any, datos: any, lDatos: any){
     this.crearSubEstados;
     let dataSet: Array<Object> = []
     let ArregloDatos: Array<Object> = []
@@ -287,16 +289,66 @@ export class AlldataComponent implements OnInit {
           ArregloDatos = [];
         }
       }
-    this.llenarGrafica(labelGrafica, dataSet);
+    this.llenarMainChart(labelGrafica, dataSet);
   }
 
-  llenarGrafica(labelGrafica: any, dataSet: Array<object>) {
+  llenarMainChart(labelGrafica: any, dataSet: Array<object>) {
       this.barChartData1 = {
         labels: labelGrafica,
         datasets: dataSet,
       };
       this.crearSubEstados()
     this.chart?.update();
+  }
+
+  crearObjetoDataSetTotal(labelGrafica: any, datos: any, lDatos: any){
+    this.crearSubEstados;  
+    let dataSet: Array<Object> = []
+    let ArregloDatos: Array<number> = []
+    for (let i = 0; i < lDatos.length; i++) {
+      for (let j = 0; j < datos.length; j++) {
+        let aux:number = datos[j][i]  
+        if(aux === undefined){ 
+          ArregloDatos.push(0)
+        }else{ 
+          ArregloDatos.push(aux)   
+        }   
+      }
+      let initialValue = 0;
+      let sumWithInitial = ArregloDatos.reduce(
+        (previousValue, currentValue) => previousValue + currentValue, initialValue
+        );
+        if(lDatos[i] == ''){
+          let objeto = {data: [sumWithInitial], label: "SIN ESTADO DE OPERACION"};        
+          dataSet.push(objeto)
+          ArregloDatos = [];
+        }else{
+          let objeto = {data: [sumWithInitial], label: lDatos[i]};
+          dataSet.push(objeto)
+          ArregloDatos = [];
+        }
+      }     
+    this.llenarSecondChart(dataSet);
+  }
+
+  llenarSecondChart( dataSet: Array<object>) {
+    if(this.opcionDepartamento == 0){
+      this.stringDepartamento = "DEPARTAMENTOS"
+      this.barChartData2 = {
+        labels: [this.stringDepartamento],
+        datasets: dataSet
+      };
+      this.crearSubEstados()
+      this.chart?.update();
+    }else{
+      this.stringDepartamento = this.opcionDepartamento
+      this.barChartData2 = {
+        labels: [this.stringDepartamento],
+        datasets: dataSet
+      };
+      this.crearSubEstados()
+      this.chart?.update();
+    }
   }
 
   /* Barra chart1*/
@@ -343,28 +395,6 @@ export class AlldataComponent implements OnInit {
   public barChartType2: ChartType = 'bar';
   public barChartPlugins2 = [DataLabelsPlugin];
 
-  /* Barra chart3*/
-  public barChartOptions3: ChartConfiguration['options'] = {
-    responsive: true,
-    scales: {
-      x: {},
-      y: {
-        min: 0,
-      },
-    },
-    plugins: {
-      legend: {
-        display: true,
-      },
-      datalabels: {
-        anchor: 'end',
-        align: 'end',
-      },
-    },
-  };
-  public barChartType3: ChartType = 'bar';
-  public barChartPlugins3 = [DataLabelsPlugin];
-
   /* check box */
 crearSubEstados(): Array<Estado>{
   let subestado:any = []
@@ -378,7 +408,7 @@ crearSubEstados(): Array<Estado>{
       let objeto: Estado = {nombre: element, completed: false, color: 'accent'};        
       subestado.push(objeto)
     }
-    console.log(subestado)
+    // console.log(subestado)
     return subestado;
   });
   return [];

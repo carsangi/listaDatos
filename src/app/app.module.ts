@@ -17,6 +17,7 @@ import { NavegationComponent } from './components/navegation/navegation.componen
 import { LastmonthComponent } from './components/lastmonth/lastmonth.component';
 import { AlldataComponent } from './components/alldata/alldata.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { FooterComponent } from './components/footer/footer.component';
     NavegationComponent,
     LastmonthComponent,
     AlldataComponent,
-    FooterComponent
+    FooterComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

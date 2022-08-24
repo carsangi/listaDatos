@@ -13,8 +13,8 @@
           </canvas>
         </div>
       </div>
-<!--       <div class="row">
-        <div class="col-6">
+      <div class="row">
+        <div class="col">
           <div style="display: block" id="left-chart" class="mt-5">
             <canvas
               baseChart
@@ -26,19 +26,40 @@
             </canvas>
           </div>
         </div>
-        <div class="col-6">
-          <div style="display: block" id="right-chart" class="mt-5">
-            <canvas
-              baseChart
-              [data]="barChartData3"
-              [options]="barChartOptions3"
-              [plugins]="barChartPlugins3"
-              [type]="barChartType3"
-            >
-            </canvas>
-          </div>
-        </div> 
-      </div>-->
+        <h1>{{stringDepartamento}}</h1>
+        <table id="tablaTotal">
+          <thead>
+            <tr>
+              <th *ngFor="let estado of estadosOperacion" >{{ estado }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let municipio of municipios , let contador of ">
+              <td>{{ municipio }}</td>
+              <td>1</td>
+              <td>2</td>
+              <td>3</td>
+              <td>4</td>
+              <td>5</td>
+              <td>6</td>
+              <td>7</td>
+              <td>8</td>
+              <td>9</td>
+              <td>10</td>
+              <td>11</td>
+              <td>12</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>
+                Total
+              </th>
+              <th>299</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </section>
     <aside class="asideFiltros col-3">
       <h1>Estados de las solicitudes de servicios</h1>
@@ -47,21 +68,10 @@
           <input
             type="radio"
             id="fechaSolicitud"
-            name="fav_language"
-            value="HTML"
+            (click)="getFechas('B')"
           />
           <label for="fechaSolicitud" (click)="getFechas('B')"
-            >Fecha de solicitud</label
-          ><br />
-          <input
-            type="radio"
-            id="fechaActivacion"
-            name="fav_language"
-            value="CSS"
-          />
-          <label for="fechaActivacion" (click)="getFechas('E')"
-            >Fecha de activación</label
-          ><br />
+            >Fecha de solicitud</label>
         </div>
       </div>
       <div class="row">
@@ -104,7 +114,7 @@
               name="departamento"
               id="departamento"
             >
-              <option [value]="0">Departamento</option>
+              <option [value]="0">Departamentos</option>
               <option [value]="" *ngFor="let item of departamentos">
                 {{ item }}
               </option>
