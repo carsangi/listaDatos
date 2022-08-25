@@ -41,9 +41,12 @@ export class AlldataComponent implements OnInit {
   stringDepartamento: string = "";
   totalDataSet: number[] = [];
   mainDataSet: number[][] = [];
+  labelTable: string[] = [];
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getFechas('B')
+  }
   
   getFechas(column: string) {
     this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
@@ -312,6 +315,7 @@ export class AlldataComponent implements OnInit {
     this.crearSubEstados;  
     let dataSet: Array<Object> = []
     let ArregloDatos: Array<number> = []
+    let arregloLabel: Array<string> = []
     let totalizador: Array<number> = []
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
@@ -330,14 +334,17 @@ export class AlldataComponent implements OnInit {
           let objeto = {data: [sumWithInitial], label: "SIN ESTADO DE OPERACION"};
           totalizador.push(sumWithInitial);
           dataSet.push(objeto)
+          arregloLabel.push("SIN ESTADO DE OPERACION")
           ArregloDatos = [];
         }else{
           let objeto = {data: [sumWithInitial], label: lDatos[i]};
           totalizador.push(sumWithInitial);
           dataSet.push(objeto)
+          arregloLabel.push(lDatos[i])
           ArregloDatos = [];
         }
-      }     
+      }
+      this.labelTable = arregloLabel;     
       this.totalDataSet = totalizador;
       this.llenarSecondChart(dataSet);
   }

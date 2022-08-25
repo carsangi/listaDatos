@@ -27,16 +27,16 @@
           </div>
         </div>
         <h1>TABLA RESUMEN</h1>
-          <table id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios">
+          <table class="table" id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios">
             <thead>
               <tr>
                 <th>{{ stringDepartamento }}</th>
-                <th *ngFor="let estado of estadosOperacion">{{ estado }}</th>
+                <th *ngFor="let label of labelTable">{{ label }}</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let row of mainDataSet; let i = index">
-                <td>{{ departamentos[i] }}
+                <th>{{ departamentos[i] }}</th>
                 <td *ngFor="let item of row" > {{item}}</td>
               </tr>
             </tbody>
@@ -48,16 +48,16 @@
             </tfoot>
           </table>
           <ng-template #tMunicipios>
-            <table id="tablaTotal">
+            <table class="table" id="tablaTotal">
               <thead>
                 <tr>
                   <th>{{ stringDepartamento }}</th>
-                  <th *ngFor="let estado of estadosOperacion">{{ estado }}</th>
+                  <th *ngFor="let label of labelTable">{{ label }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let row of mainDataSet; let i = index">
-                  <td>{{ municipios[i] }}
+                  <th>{{ municipios[i] }}</th>
                   <td *ngFor="let item of row" > {{item}}</td>
                 </tr>
               </tbody>
@@ -73,14 +73,6 @@
     </section>
     <aside class="asideFiltros col-3">
       <h1>Estados de las solicitudes de servicios</h1>
-      <div class="row">
-        <div class="radioButton">
-          <input type="radio" id="fechaSolicitud" (click)="getFechas('B')" />
-          <label for="fechaSolicitud" (click)="getFechas('B')"
-            >Fecha de solicitud</label
-          >
-        </div>
-      </div>
       <div class="row">
         <div class="col-8">
           <mat-form-field appearance="standard" id="fecha">
