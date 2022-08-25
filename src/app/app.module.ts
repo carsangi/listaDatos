@@ -15,7 +15,6 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NavegationComponent } from './components/navegation/navegation.component';
 import { LastmonthComponent } from './components/lastmonth/lastmonth.component';
-import { AlldataComponent } from './components/alldata/alldata.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { ActivationstatusComponent } from './components/activationstatus/activationstatus.component';
@@ -29,7 +28,6 @@ import { ActivationrecordComponent } from './components/activationrecord/activat
     AppComponent,
     NavegationComponent,
     LastmonthComponent,
-    AlldataComponent,
     FooterComponent,
     HomeComponent,
     ActivationstatusComponent,
