@@ -39,6 +39,8 @@ export class AlldataComponent implements OnInit {
   opcionFiltrado: any;
   categoria: any;
   stringDepartamento: string = "";
+  totalDataSet: number[] = [];
+  mainDataSet: number[][] = [];
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
   ngOnInit(): void {}
@@ -269,7 +271,8 @@ export class AlldataComponent implements OnInit {
   crearObjetoDatasetMainChart(labelGrafica: any, datos: any, lDatos: any){
     this.crearSubEstados;
     let dataSet: Array<Object> = []
-    let ArregloDatos: Array<Object> = []
+    let ArregloDatos: Array<number> = []
+    let arregloTabla: Array<Array<number>> = []
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
         let aux = datos[j][i]
@@ -280,15 +283,18 @@ export class AlldataComponent implements OnInit {
         }
       }
         if(lDatos[i] == ''){
-          let objeto = {data: ArregloDatos, label: "SIN ESTADO DE OPERACION"};        
+          let objeto = {data: ArregloDatos, label: "SIN ESTADO DE OPERACION"};
+          arregloTabla.push(ArregloDatos);
           dataSet.push(objeto)
           ArregloDatos = [];
         }else{
           let objeto = {data: ArregloDatos, label: lDatos[i]};
+          arregloTabla.push(ArregloDatos);
           dataSet.push(objeto)
           ArregloDatos = [];
         }
       }
+    this.mainDataSet = datos;
     this.llenarMainChart(labelGrafica, dataSet);
   }
 
@@ -298,13 +304,15 @@ export class AlldataComponent implements OnInit {
         datasets: dataSet,
       };
       this.crearSubEstados()
-    this.chart?.update();
+
+      this.chart?.update();
   }
 
   crearObjetoDataSetTotal(labelGrafica: any, datos: any, lDatos: any){
     this.crearSubEstados;  
     let dataSet: Array<Object> = []
     let ArregloDatos: Array<number> = []
+    let totalizador: Array<number> = []
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
         let aux:number = datos[j][i]  
@@ -319,16 +327,19 @@ export class AlldataComponent implements OnInit {
         (previousValue, currentValue) => previousValue + currentValue, initialValue
         );
         if(lDatos[i] == ''){
-          let objeto = {data: [sumWithInitial], label: "SIN ESTADO DE OPERACION"};        
+          let objeto = {data: [sumWithInitial], label: "SIN ESTADO DE OPERACION"};
+          totalizador.push(sumWithInitial);
           dataSet.push(objeto)
           ArregloDatos = [];
         }else{
           let objeto = {data: [sumWithInitial], label: lDatos[i]};
+          totalizador.push(sumWithInitial);
           dataSet.push(objeto)
           ArregloDatos = [];
         }
       }     
-    this.llenarSecondChart(dataSet);
+      this.totalDataSet = totalizador;
+      this.llenarSecondChart(dataSet);
   }
 
   llenarSecondChart( dataSet: Array<object>) {

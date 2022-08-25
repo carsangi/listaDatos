@@ -26,52 +26,57 @@
             </canvas>
           </div>
         </div>
-        <h1>{{stringDepartamento}}</h1>
-        <table id="tablaTotal">
-          <thead>
-            <tr>
-              <th *ngFor="let estado of estadosOperacion" >{{ estado }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let municipio of municipios , let contador of ">
-              <td>{{ municipio }}</td>
-              <td>1</td>
-              <td>2</td>
-              <td>3</td>
-              <td>4</td>
-              <td>5</td>
-              <td>6</td>
-              <td>7</td>
-              <td>8</td>
-              <td>9</td>
-              <td>10</td>
-              <td>11</td>
-              <td>12</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>
-                Total
-              </th>
-              <th>299</th>
-            </tr>
-          </tfoot>
-        </table>
+        <h1>{{ stringDepartamento }}</h1>
+          <table id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios">
+            <thead>
+              <tr>
+                <th *ngFor="let estado of estadosOperacion">{{ estado }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of mainDataSet; let i = index">
+                <td>{{ departamentos[i] }}
+                <td *ngFor="let item of row" > {{item}}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>TOTAL</th>
+                <th *ngFor="let item of totalDataSet" >{{item}}</th>
+              </tr>
+            </tfoot>
+          </table>
+          <ng-template #tMunicipios>
+            <table id="tablaTotal">
+              <thead>
+                <tr>
+                  <th *ngFor="let estado of estadosOperacion">{{ estado }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of mainDataSet; let i = index">
+                  <td>{{ municipios[i] }}
+                  <td *ngFor="let item of row" > {{item}}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>TOTAL</th>
+                  <th *ngFor="let item of totalDataSet" >{{item}}</th>
+                </tr>
+              </tfoot>
+            </table>
+          </ng-template>
       </div>
     </section>
     <aside class="asideFiltros col-3">
       <h1>Estados de las solicitudes de servicios</h1>
       <div class="row">
         <div class="radioButton">
-          <input
-            type="radio"
-            id="fechaSolicitud"
-            (click)="getFechas('B')"
-          />
+          <input type="radio" id="fechaSolicitud" (click)="getFechas('B')" />
           <label for="fechaSolicitud" (click)="getFechas('B')"
-            >Fecha de solicitud</label>
+            >Fecha de solicitud</label
+          >
         </div>
       </div>
       <div class="row">
@@ -122,8 +127,6 @@
           </div>
         </div>
 
-
-        
         <!-- <span class="example-list-section">
           <mat-checkbox
             class="example-margin"
