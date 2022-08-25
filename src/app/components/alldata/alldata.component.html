@@ -26,10 +26,11 @@
             </canvas>
           </div>
         </div>
-        <h1>{{ stringDepartamento }}</h1>
+        <h1>TABLA RESUMEN</h1>
           <table id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios">
             <thead>
               <tr>
+                <th>{{ stringDepartamento }}</th>
                 <th *ngFor="let estado of estadosOperacion">{{ estado }}</th>
               </tr>
             </thead>
@@ -50,6 +51,7 @@
             <table id="tablaTotal">
               <thead>
                 <tr>
+                  <th>{{ stringDepartamento }}</th>
                   <th *ngFor="let estado of estadosOperacion">{{ estado }}</th>
                 </tr>
               </thead>
