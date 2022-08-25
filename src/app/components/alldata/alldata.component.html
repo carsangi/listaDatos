@@ -3,6 +3,7 @@
     <section class="sectionGraficas col-9">
       <div class="row">
         <div style="display: block" id="main-chart" class="mt-5">
+          <h1>GRAFICA POR {{ stringDepartamento }}</h1>
           <canvas
             baseChart
             [data]="barChartData1"
@@ -16,6 +17,7 @@
       <div class="row">
         <div class="col">
           <div style="display: block" id="left-chart" class="mt-5">
+            <h1>GRAFICA RESUMEN</h1>
             <canvas
               baseChart
               [data]="barChartData2"
