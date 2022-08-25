@@ -1,26 +1,32 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AlldataComponent } from './components/alldata/alldata.component'
-import { LastmonthComponent } from './components/lastmonth/lastmonth.component'
+import { RequeststatusComponent } from './components/requeststatus/requeststatus.component'
+import { ActivationstatusComponent } from './components/activationstatus/activationstatus.component'
 import { HomeComponent } from './components/home/home.component'
+import { RequestrecordComponent } from './components/requestrecord/requestrecord.component'
+import { ActivationrecordComponent } from './components/activationrecord/activationrecord.component'
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/home',
+    component: HomeComponent,
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    component: HomeComponent
+    path: 'estado-solicitud',
+    component: RequeststatusComponent
   },
   {
-    path: 'consulta',
-    component: AlldataComponent
+    path: 'estado-activacion',
+    component: ActivationstatusComponent
   },
   {
-    path: 'historial',
-    component: LastmonthComponent
+    path: 'historial-solicitud',
+    component: RequestrecordComponent
+  },
+  {
+    path: 'historial-activacion',
+    component: ActivationrecordComponent
   },
 
 ];
