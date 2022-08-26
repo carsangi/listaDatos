@@ -15,6 +15,7 @@ export class ActivationstatusComponent implements OnInit {
   columnDate: any = [];
   fechaDesde: Object = {};
   fechaHasta: Object = {};
+  data: any;
 
   constructor(private consultaAPIservice: ConsultaAPIService) { }
 
@@ -53,24 +54,29 @@ export class ActivationstatusComponent implements OnInit {
         let año = element.year();
         let fechaActual = new Date(año, mes, dia);
         if (fechaActual >= fechaA && fechaActual <= fechaB) {
-          var objeto = {
-            fecha: fechaActual,
-            rowIndex: row + 1,
-          };
-          arregloFechas.push(objeto);
+            let rowIndex= row + 1;
+            arregloFechas.push(rowIndex);
         }
       }
     }
-    this.filtrarExtremos(arregloFechas)
+    this.consultarExtremos(arregloFechas.sort())
     arregloFechas = []
     this.columnDate = []
+
   }
 
-  filtrarExtremos(arregloFechas: any){
-    /* buscar los extremos por medio de un mergesort, vaciar memoria de arregloFechas y hacer la cosulta de los medios */
+  consultarExtremos(arregloFechas: any){
+    let izquierda = arregloFechas[0];
+    let derecha = arregloFechas[arregloFechas.length-1]
+    this.consultaAPIservice.getConsultaDatos(izquierda, derecha).subscribe((res)=>{
+      this.data = res;
+      console.log(this.data);
+      
+    }) 
   }
 
   filtrarFechas(){
     /*  */
+    
   }
 }
