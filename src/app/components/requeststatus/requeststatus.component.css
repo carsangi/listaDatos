@@ -1,4 +1,18 @@
-#localidad select {
+#barra_titulo{
+  display: flex;
+  justify-content: space-around;
+}
+
+#barra_titulo h1{
+  font-size: 60px;
+}
+
+#barra_fecha{
+  display: flex;
+  justify-content: space-around;
+}
+
+#localidad {
     width: 180px;
     height: 40px;
     margin-top: 10px;
@@ -56,23 +70,7 @@
   .sectionGraficas {
     margin: auto;
     padding: auto;
-    border-right: 1px solid #4498EC;
     background-color: whitesmoke;
-  }
-
-  aside {
-    width: 200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: auto;
-    padding-right: auto;
-    color: #2a2820;
-    margin-left: 0px;
-  }
-
-  aside h1 {
-    font-weight: 500px;
-    font-size: 35px;
   }
 
   .radioButton {

@@ -18,7 +18,6 @@ import { LastmonthComponent } from './components/lastmonth/lastmonth.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './components/home/home.component';
 import { ActivationstatusComponent } from './components/activationstatus/activationstatus.component';
-import { OperationstatusComponent } from './components/operationstatus/operationstatus.component';
 import { RequeststatusComponent } from './components/requeststatus/requeststatus.component';
 import { RequestrecordComponent } from './components/requestrecord/requestrecord.component';
 import { ActivationrecordComponent } from './components/activationrecord/activationrecord.component';
@@ -31,7 +30,6 @@ import { ActivationrecordComponent } from './components/activationrecord/activat
     FooterComponent,
     HomeComponent,
     ActivationstatusComponent,
-    OperationstatusComponent,
     RequeststatusComponent,
     RequestrecordComponent,
     ActivationrecordComponent

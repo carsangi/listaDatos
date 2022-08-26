@@ -1,129 +1,102 @@
 <div class="main-container">
-    <div class="row">
-      <section class="sectionGraficas col-9">
-        <div class="row">
-          <div style="display: block" id="main-chart" class="mt-5">
-            <h1>GRAFICA POR {{ stringDepartamento }}</h1>
-            <canvas
-              baseChart
-              [data]="barChartData1"
-              [options]="barChartOptions1"
-              [plugins]="barChartPlugins1"
-              [type]="barChartType1"
-            >
-            </canvas>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div style="display: block" id="left-chart" class="mt-5">
-              <h1>GRAFICA RESUMEN</h1>
-              <canvas
-                baseChart
-                [data]="barChartData2"
-                [options]="barChartOptions2"
-                [plugins]="barChartPlugins2"
-                [type]="barChartType2"
-              >
-              </canvas>
-            </div>
-          </div>
-          <h1>TABLA RESUMEN</h1>
-            <table class="table" id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios">
-              <thead>
-                <tr>
-                  <th>{{ stringDepartamento }}</th>
-                  <th *ngFor="let label of labelTable">{{ label }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of mainDataSet; let i = index">
-                  <th>{{ departamentos[i] }}</th>
-                  <td *ngFor="let item of row" > {{item}}</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>TOTAL</th>
-                  <th *ngFor="let item of totalDataSet" >{{item}}</th>
-                </tr>
-              </tfoot>
-            </table>
-            <ng-template #tMunicipios>
-              <table class="table" id="tablaTotal">
-                <thead>
-                  <tr>
-                    <th>{{ stringDepartamento }}</th>
-                    <th *ngFor="let label of labelTable">{{ label }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let row of mainDataSet; let i = index">
-                    <th>{{ municipios[i] }}</th>
-                    <td *ngFor="let item of row" > {{item}}</td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th>TOTAL</th>
-                    <th *ngFor="let item of totalDataSet" >{{item}}</th>
-                  </tr>
-                </tfoot>
-              </table>
-            </ng-template>
-        </div>
-      </section>
-      <aside class="asideFiltros col-3">
-        <h1>Estados de las solicitudes de servicios</h1>
-        <div class="row">
-          <div class="col-8">
-            <mat-form-field appearance="standard" id="fecha">
-              <mat-label>Fecha</mat-label>
-              <mat-date-range-input [rangePicker]="picker">
-                <input
-                  [(ngModel)]="fechaDesde"
-                  matStartDate
-                  placeholder="D/M/AAAA"
-                />
-                <input
-                  [(ngModel)]="fechaHasta"
-                  matEndDate
-                  placeholder="D/M/AAAA"
-                />
-              </mat-date-range-input>
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
-              <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="row">
-          <i class="bi bi-search" id="buscar" (click)="buscar()">
-            <label for="">Buscar</label>
-          </i>
-        </div>
-  
-        <section class="example-section">
-          <h2>Filtros</h2>
-          <div class="row">
-            <div id="localidad">
-              <select
-                [(ngModel)]="opcionDepartamento"
-                (change)="llenarContador()"
-                name="departamento"
-                id="departamento"
-              >
-                <option [value]="0">Departamentos</option>
-                <option [value]="" *ngFor="let item of departamentos">
-                  {{ item }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </section>
-      </aside>
+  <section id="barra_titulo">
+    <h1>Estados de las Solicitudes de Servicios</h1>
+  </section>
+  <section id = "barra_fecha">
+    <mat-form-field appearance="standard" id="fecha">
+      <mat-label>Fecha</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input [(ngModel)]="fechaDesde" matStartDate placeholder="D/M/AAAA" />
+        <input [(ngModel)]="fechaHasta" matEndDate placeholder="D/M/AAAA" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <i class="bi bi-search" id="buscar" (click)="buscar()">
+      <label for="">Buscar</label>
+    </i>
+    <select
+      [(ngModel)]="opcionDepartamento"
+      (change)="llenarContador()"
+      name="departamento"
+      id="departamento"
+      id = "localidad"
+    >
+      <option [value]="0" >Departamentos</option>
+      <option [value]="" *ngFor="let item of departamentos">
+        {{ item }}
+      </option>
+    </select>
+  </section>
+  <section class="sectionGraficas">
+    <div style="display: block" id="main-chart" class="mt-5">
+      <h1>GRAFICA POR {{ stringDepartamento }}</h1>
+      <canvas
+        baseChart
+        [data]="barChartData1"
+        [options]="barChartOptions1"
+        [plugins]="barChartPlugins1"
+        [type]="barChartType1"
+      >
+      </canvas>
     </div>
-  </div>
-  
+    <div style="display: block" id="left-chart" class="mt-5">
+      <h1>GRAFICA RESUMEN</h1>
+      <canvas
+        baseChart
+        [data]="barChartData2"
+        [options]="barChartOptions2"
+        [plugins]="barChartPlugins2"
+        [type]="barChartType2"
+      >
+      </canvas>
+    </div>
+    <h1>TABLA RESUMEN</h1>
+    <table
+      class="table"
+      id="tablaTotal"
+      *ngIf="opcionDepartamento == 0; else tMunicipios"
+    >
+      <thead>
+        <tr>
+          <th>{{ stringDepartamento }}</th>
+          <th *ngFor="let label of labelTable">{{ label }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of mainDataSet; let i = index">
+          <th>{{ departamentos[i] }}</th>
+          <td *ngFor="let item of row">{{ item }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>TOTAL</th>
+          <th *ngFor="let item of totalDataSet">{{ item }}</th>
+        </tr>
+      </tfoot>
+    </table>
+    <ng-template #tMunicipios>
+      <table class="table" id="tablaTotal">
+        <thead>
+          <tr>
+            <th>{{ stringDepartamento }}</th>
+            <th *ngFor="let label of labelTable">{{ label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of mainDataSet; let i = index">
+            <th>{{ municipios[i] }}</th>
+            <td *ngFor="let item of row">{{ item }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>TOTAL</th>
+            <th *ngFor="let item of totalDataSet">{{ item }}</th>
+          </tr>
+        </tfoot>
+      </table>
+    </ng-template>
+  </section>
+</div>
