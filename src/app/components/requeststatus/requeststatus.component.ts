@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
-import { ThemePalette } from '@angular/material/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ConsultaAPIService } from '../../services/consulta-api.service';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
@@ -36,10 +35,10 @@ export class RequeststatusComponent implements OnInit {
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
   ngOnInit(): void {
-    this.getFechas('B')
+    this.getColumn('B')
   }
   
-  getFechas(column: string) {
+  getColumn(column: string) {
     this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
       this.columnDate = res;
     });

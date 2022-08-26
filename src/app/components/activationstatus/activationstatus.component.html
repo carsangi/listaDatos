@@ -1,1 +1,23 @@
 <p>activationstatus works!</p>
+
+<aside class="asideFiltros col-3">
+  <h1>Estados de las solicitudes de servicios</h1>
+  <div class="row">
+    <div class="col-8">
+      <mat-form-field appearance="standard" id="fecha">
+        <mat-label>Fecha</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input [(ngModel)]="fechaDesde" matStartDate placeholder="D/M/AAAA" />
+          <input [(ngModel)]="fechaHasta" matEndDate placeholder="D/M/AAAA" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <i class="bi bi-search" id="buscar" (click)="buscar()">
+      <label for="">Buscar</label>
+    </i>
+  </div>
+</aside>
