@@ -360,12 +360,17 @@ export class RequeststatusComponent implements OnInit {
     scales: {
       x: {},
       y: {
+        title : {
+          display: true,
+          text: 'CANTIDAD DE SOLICITUDES'
+        },
         min: 0,
       },
     },
     plugins: {
       legend: {
         display: true,
+        position: 'right'
       },
       datalabels: {
         anchor: 'end',
@@ -382,12 +387,17 @@ export class RequeststatusComponent implements OnInit {
     scales: {
       x: {},
       y: {
+        title : {
+          display: true,
+          text: 'CANTIDAD DE SOLICITUDES'
+        },
         min: 0,
       },
     },
     plugins: {
       legend: {
         display: true,
+        position: 'right'
       },
       datalabels: {
         anchor: 'end',
