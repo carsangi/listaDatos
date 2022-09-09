@@ -32,6 +32,8 @@
     <div style="display: block; width: 1050px; " id="main-chart" class="mt-5">
       <h1>GRAFICA POR {{ stringDepartamento }}</h1>
       <canvas
+      width="800"
+      height="300"
         baseChart
         [data]="barChartData1"
         [options]="barChartOptions1"
@@ -43,6 +45,8 @@
     <div style="display: block; width: 1050px;" id="left-chart" class="mt-5">
       <h1>GRAFICA RESUMEN</h1>
       <canvas
+      width="800"
+      height="300"
         baseChart
         [data]="barChartData2"
         [options]="barChartOptions2"

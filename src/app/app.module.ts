@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioModule } from '@angular/material/radio';
 import { NavegationComponent } from './components/navegation/navegation.component';
 import { LastmonthComponent } from './components/lastmonth/lastmonth.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -45,6 +46,7 @@ import { ActivationrecordComponent } from './components/activationrecord/activat
     MatMomentDateModule,
     MatFormFieldModule,
     MatCheckboxModule,
+    MatRadioModule,
   ],
   providers: [
     ConsultaAPIService,

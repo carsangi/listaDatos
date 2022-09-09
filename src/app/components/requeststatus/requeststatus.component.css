@@ -101,3 +101,8 @@
     list-style-type: none;
     margin-top: 4px;
   }
+
+  .tamanio{
+    box-sizing: border-box;
+    width: 800px;
+  }

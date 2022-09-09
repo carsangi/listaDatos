@@ -17,4 +17,8 @@ export class ConsultaAPIService {
   getConsultaDatos(indexInicio: number, indexFinal: number){
     return this.http.get(`${this.API_URI}/listarconIndex?indexInicio=${indexInicio}&indexFinal=${indexFinal}`);
   }
+
+  getConsultaSQL(fechaDesde: string, fechaHasta: string, columna: string){
+    return this.http.get(`${this.API_URI}/SQLquery?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}&variable=${columna}`);
+  }
 }

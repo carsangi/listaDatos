@@ -1,23 +1,115 @@
-<p>activationstatus works!</p>
-
-<aside class="asideFiltros col-3">
-  <h1>Estados de las solicitudes de servicios</h1>
-  <div class="row">
-    <div class="col-8">
-      <mat-form-field appearance="standard" id="fecha">
-        <mat-label>Fecha</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input [(ngModel)]="fechaDesde" matStartDate placeholder="D/M/AAAA" />
-          <input [(ngModel)]="fechaHasta" matEndDate placeholder="D/M/AAAA" />
-        </mat-date-range-input>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field>
+<div class="main-container">
+  <section id="barra_titulo">
+    <h1>Estados de las Activaciones de Servicios</h1>
+  </section>
+  <section id = "barra_fecha">
+    <div>
+      <label for="">Base de datos</label><br>
+      <input type="radio" id="sheet" name="bd_selector" value="1" [(ngModel)]="bd_selector">
+      <label for="sheet">Sheet</label><br>
+      <input type="radio" id="sql" name="bd_selector" value="2" [(ngModel)]="bd_selector">
+      <label for="sql">SQL</label><br>
     </div>
-  </div>
-  <div class="row">
+    <mat-form-field appearance="standard" id="fecha">
+      <mat-label>Fecha</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input [(ngModel)]="fechaDesde" matStartDate placeholder="D/M/AAAA" />
+        <input [(ngModel)]="fechaHasta" matEndDate placeholder="D/M/AAAA" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
     <i class="bi bi-search" id="buscar" (click)="buscar()">
       <label for="">Buscar</label>
     </i>
-  </div>
-</aside>
+    <select
+      [(ngModel)]="opcionDepartamento"
+      (change)="llenarContador()"
+      name="departamento"
+      id="departamento"
+      id = "localidad"
+    >
+      <option [value]="0" >Departamentos</option>
+      <option [value]="" *ngFor="let item of departamentos">
+        {{ item }}
+      </option>
+    </select>
+  </section>
+  <section id="seccionPage">
+  <section id="seccionTabla">
+    <h1>TABLA RESUMEN</h1>
+    <table
+    class="table tamanio" id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios" >
+    <thead>
+      <tr>
+        <th>{{ stringDepartamento }}</th>
+        <th *ngFor="let label of labelTable">{{ label }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of mainDataSet; let i = index">
+        <th>{{ departamentos[i] }}</th>
+        <td *ngFor="let item of row">{{ item }}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>TOTAL</th>
+        <th *ngFor="let item of totalDataSet">{{ item }}</th>
+      </tr>
+    </tfoot>
+  </table>
+  <ng-template #tMunicipios>
+    <table class="table" id="tablaTotal">
+      <thead>
+        <tr>
+          <th>{{ stringDepartamento }}</th>
+          <th *ngFor="let label of labelTable">{{ label }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of mainDataSet; let i = index">
+          <th>{{ municipios[i] }}</th>
+          <td *ngFor="let item of row">{{ item }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>TOTAL</th>
+          <th *ngFor="let item of totalDataSet">{{ item }}</th>
+        </tr>
+      </tfoot>
+    </table>
+  </ng-template>
+</section>
+  <section class="sectionGraficas">
+    <div class="tamanio mt-0" id="main-chart">
+      <h1>GRAFICA POR {{ stringDepartamento }}</h1>
+      <canvas
+      width="420"
+      height="175"
+        baseChart
+        [data]="barChartData1"
+        [options]="barChartOptions1"
+        [plugins]="barChartPlugins1"
+        [type]="barChartType1"
+      >
+      </canvas>
+    </div>
+    <div class="tamanio mt-0" id="left-chart">
+      <h1 style="margin-bottom: 10px;">GRAFICA RESUMEN</h1>
+      <canvas
+      width="420"
+      height="175"
+        baseChart
+        [data]="barChartData2"
+        [options]="barChartOptions2"
+        [plugins]="barChartPlugins2"
+        [type]="barChartType2"
+      >
+      </canvas>
+    </div>
+  </section>
+</section>
+</div>
+

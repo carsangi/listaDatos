@@ -9,7 +9,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-requeststatus',
   templateUrl: './requeststatus.component.html',
-  styleUrls: ['./requeststatus.component.css']
+  styleUrls: ['./requeststatus.component.css'],
 })
 export class RequeststatusComponent implements OnInit {
   public barChartData1: ChartData<'bar'> | any | undefined;
@@ -28,26 +28,25 @@ export class RequeststatusComponent implements OnInit {
   estadosRetiro: any = [];
   opcionFiltrado: any;
   categoria: any;
-  stringDepartamento: string = "";
+  stringDepartamento: string = '';
   totalDataSet: number[] = [];
   mainDataSet: number[][] = [];
   labelTable: string[] = [];
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
-  ngOnInit(): void {
-    this.getColumn('B')
-  }
-  
+  ngOnInit(): void {}
+
   getColumn(column: string) {
     this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
       this.columnDate = res;
+      let fechaDesde = moment(this.fechaDesde);
+      let fechaHasta = moment(this.fechaHasta);
+      this.filtrarFechas(fechaDesde, fechaHasta);
     });
   }
 
   buscar() {
-    let fechaDesde = moment(this.fechaDesde);
-    let fechaHasta = moment(this.fechaHasta);
-    this.filtrarFechas(fechaDesde, fechaHasta);
+    this.getColumn('B');
   }
 
   filtrarFechas(fechaDesde: Moment, fechaHasta: Moment) {
@@ -78,7 +77,7 @@ export class RequeststatusComponent implements OnInit {
       }
     }
     this.divirArreglo(arregloFechas);
-    arregloFechas = []
+    arregloFechas = [];
   }
 
   divirArreglo(arregloFechas: Array<any>) {
@@ -109,7 +108,6 @@ export class RequeststatusComponent implements OnInit {
     matrizFecha = [];
     aux = [];
     rowAnterior = 0;
-
   }
 
   consultarDatos(matrizFecha: Array<any>) {
@@ -136,9 +134,13 @@ export class RequeststatusComponent implements OnInit {
     let aux: any = [];
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
-        if(element2[4] === undefined || element2[4] == ' ' || element2[4] === ''){
+        if (
+          element2[4] === undefined ||
+          element2[4] == ' ' ||
+          element2[4] === ''
+        ) {
           aux.push('');
-        }else{
+        } else {
           aux.push(element2[4]);
         }
       });
@@ -148,14 +150,18 @@ export class RequeststatusComponent implements OnInit {
     });
     this.estadosOperacion.sort();
   }
-  
+
   filtrarEstadoRetiro() {
     let aux: any = [];
     this.data.forEach((element: any) => {
       element.forEach((element2: any) => {
-        if(element2[5] === undefined || element2[5] == ' ' || element2[5] === ''){
+        if (
+          element2[5] === undefined ||
+          element2[5] == ' ' ||
+          element2[5] === ''
+        ) {
           aux.push('');
-        }else{
+        } else {
           aux.push(element2[5]);
         }
       });
@@ -198,8 +204,8 @@ export class RequeststatusComponent implements OnInit {
   llenarContador() {
     let labelGrafica: any = [];
     let lDatos = this.estadosOperacion;
-    let datos = Array(this.departamentos.length)
-    let contadores=Array(this.estadosOperacion.length);
+    let datos = Array(this.departamentos.length);
+    let contadores = Array(this.estadosOperacion.length);
     let contadorVacios = 0;
 
     if (this.opcionDepartamento == '0') {
@@ -209,25 +215,27 @@ export class RequeststatusComponent implements OnInit {
         contadores.fill(0);
         this.data.map((item: any) => {
           item.forEach((row: any) => {
-            if (this.departamentos[i] === (row[2]) && row[4] == undefined ){
+            if (this.departamentos[i] === row[2] && row[4] == undefined) {
               contadorVacios++;
-            }else{
+            } else {
               for (let j = 0; j < contadores.length; j++) {
-                if (this.departamentos[i] === (row[2]) && this.estadosOperacion[j] === row[4]) {
+                if (
+                  this.departamentos[i] === row[2] &&
+                  this.estadosOperacion[j] === row[4]
+                ) {
                   contadores[j]++;
                 }
               }
-            }  
+            }
           });
         });
-                  
-        
-        if(contadorVacios > 0){
-          contadores[0]= contadores[0] + contadorVacios;
+
+        if (contadorVacios > 0) {
+          contadores[0] = contadores[0] + contadorVacios;
           contadorVacios = 0;
-        } 
-        datos[i]=contadores;
-        contadores = []
+        }
+        datos[i] = contadores;
+        contadores = [];
       }
     } else if (this.opcionDepartamento != 0) {
       this.filtrarMunicipio(this.opcionDepartamento);
@@ -237,118 +245,128 @@ export class RequeststatusComponent implements OnInit {
         contadores.fill(0);
         this.data.map((item: any) => {
           item.forEach((row: any) => {
-            if (this.municipios[i] === (row[1]) && (row[4] == undefined || row[4] == '')){
+            if (
+              this.municipios[i] === row[1] &&
+              (row[4] == undefined || row[4] == '')
+            ) {
               contadorVacios++;
-            }else{
+            } else {
               for (let j = 0; j < contadores.length; j++) {
-                if (this.municipios[i] === (row[1]) && this.estadosOperacion[j] === row[4]) {
+                if (
+                  this.municipios[i] === row[1] &&
+                  this.estadosOperacion[j] === row[4]
+                ) {
                   contadores[j]++;
                 }
               }
             }
           });
         });
-        
-        if(contadorVacios > 0){
-          contadores[0]= contadores[0] + contadorVacios;
+
+        if (contadorVacios > 0) {
+          contadores[0] = contadores[0] + contadorVacios;
           contadorVacios = 0;
-        } 
-        datos[i]=contadores;
-        contadores = []
-      }      
+        }
+        datos[i] = contadores;
+        contadores = [];
+      }
     }
     this.crearObjetoDatasetMainChart(labelGrafica, datos, lDatos);
     this.crearObjetoDataSetTotal(labelGrafica, datos, lDatos);
   }
 
-  crearObjetoDatasetMainChart(labelGrafica: any, datos: any, lDatos: any){
-    let dataSet: Array<Object> = []
-    let ArregloDatos: Array<number> = []
-    let arregloTabla: Array<Array<number>> = []
+  crearObjetoDatasetMainChart(labelGrafica: any, datos: any, lDatos: any) {
+    let dataSet: Array<Object> = [];
+    let ArregloDatos: Array<number> = [];
+    let arregloTabla: Array<Array<number>> = [];
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
-        let aux = datos[j][i]
-        if(aux === undefined){
-          ArregloDatos.push(0)
-        }else{
-          ArregloDatos.push(aux)   
+        let aux = datos[j][i];
+        if (aux === undefined) {
+          ArregloDatos.push(0);
+        } else {
+          ArregloDatos.push(aux);
         }
       }
-        if(lDatos[i] == ''){
-          let objeto = {data: ArregloDatos, label: "SIN ESTADO DE OPERACION"};
-          arregloTabla.push(ArregloDatos);
-          dataSet.push(objeto)
-          ArregloDatos = [];
-        }else{
-          let objeto = {data: ArregloDatos, label: lDatos[i]};
-          arregloTabla.push(ArregloDatos);
-          dataSet.push(objeto)
-          ArregloDatos = [];
-        }
+      if (lDatos[i] == '') {
+        let objeto = { data: ArregloDatos, label: 'SIN ESTADO DE OPERACION' };
+        arregloTabla.push(ArregloDatos);
+        dataSet.push(objeto);
+        ArregloDatos = [];
+      } else {
+        let objeto = { data: ArregloDatos, label: lDatos[i] };
+        arregloTabla.push(ArregloDatos);
+        dataSet.push(objeto);
+        ArregloDatos = [];
       }
+    }
     this.mainDataSet = datos;
     this.llenarMainChart(labelGrafica, dataSet);
   }
 
   llenarMainChart(labelGrafica: any, dataSet: Array<object>) {
-      this.barChartData1 = {
-        labels: labelGrafica,
-        datasets: dataSet,
-      };
+    this.barChartData1 = {
+      labels: labelGrafica,
+      datasets: dataSet,
+    };
 
-      this.chart?.update();
+    this.chart?.update();
   }
 
-  crearObjetoDataSetTotal(labelGrafica: any, datos: any, lDatos: any){
-    let dataSet: Array<Object> = []
-    let ArregloDatos: Array<number> = []
-    let arregloLabel: Array<string> = []
-    let totalizador: Array<number> = []
+  crearObjetoDataSetTotal(labelGrafica: any, datos: any, lDatos: any) {
+    let dataSet: Array<Object> = [];
+    let ArregloDatos: Array<number> = [];
+    let arregloLabel: Array<string> = [];
+    let totalizador: Array<number> = [];
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
-        let aux:number = datos[j][i]  
-        if(aux === undefined){ 
-          ArregloDatos.push(0)
-        }else{ 
-          ArregloDatos.push(aux)   
-        }   
+        let aux: number = datos[j][i];
+        if (aux === undefined) {
+          ArregloDatos.push(0);
+        } else {
+          ArregloDatos.push(aux);
+        }
       }
       let initialValue = 0;
       let sumWithInitial = ArregloDatos.reduce(
-        (previousValue, currentValue) => previousValue + currentValue, initialValue
-        );
-        if(lDatos[i] == ''){
-          let objeto = {data: [sumWithInitial], label: "SIN ESTADO DE OPERACION"};
-          totalizador.push(sumWithInitial);
-          dataSet.push(objeto)
-          arregloLabel.push("SIN ESTADO DE OPERACION")
-          ArregloDatos = [];
-        }else{
-          let objeto = {data: [sumWithInitial], label: lDatos[i]};
-          totalizador.push(sumWithInitial);
-          dataSet.push(objeto)
-          arregloLabel.push(lDatos[i])
-          ArregloDatos = [];
-        }
+        (previousValue, currentValue) => previousValue + currentValue,
+        initialValue
+      );
+      if (lDatos[i] == '') {
+        let objeto = {
+          data: [sumWithInitial],
+          label: 'SIN ESTADO DE OPERACION',
+        };
+        totalizador.push(sumWithInitial);
+        dataSet.push(objeto);
+        arregloLabel.push('SIN ESTADO DE OPERACION');
+        ArregloDatos = [];
+      } else {
+        let objeto = { data: [sumWithInitial], label: lDatos[i] };
+        totalizador.push(sumWithInitial);
+        dataSet.push(objeto);
+        arregloLabel.push(lDatos[i]);
+        ArregloDatos = [];
       }
-      this.labelTable = arregloLabel;     
-      this.totalDataSet = totalizador;
-      this.llenarSecondChart(dataSet);
+    }
+    this.labelTable = arregloLabel;
+    this.totalDataSet = totalizador;
+    this.llenarSecondChart(dataSet);
   }
 
-  llenarSecondChart( dataSet: Array<object>) {
-    if(this.opcionDepartamento == 0){
-      this.stringDepartamento = "DEPARTAMENTOS"
+  llenarSecondChart(dataSet: Array<object>) {
+    if (this.opcionDepartamento == 0) {
+      this.stringDepartamento = 'DEPARTAMENTOS';
       this.barChartData2 = {
         labels: [this.stringDepartamento],
-        datasets: dataSet
+        datasets: dataSet,
       };
       this.chart?.update();
-    }else{
-      this.stringDepartamento = this.opcionDepartamento
+    } else {
+      this.stringDepartamento = this.opcionDepartamento;
       this.barChartData2 = {
         labels: [this.stringDepartamento],
-        datasets: dataSet
+        datasets: dataSet,
       };
       this.chart?.update();
     }
@@ -360,9 +378,9 @@ export class RequeststatusComponent implements OnInit {
     scales: {
       x: {},
       y: {
-        title : {
+        title: {
           display: true,
-          text: 'CANTIDAD DE SOLICITUDES'
+          text: 'CANTIDAD DE SOLICITUDES',
         },
         min: 0,
       },
@@ -370,7 +388,7 @@ export class RequeststatusComponent implements OnInit {
     plugins: {
       legend: {
         display: true,
-        position: 'right'
+        position: 'right',
       },
       datalabels: {
         anchor: 'end',
@@ -387,9 +405,9 @@ export class RequeststatusComponent implements OnInit {
     scales: {
       x: {},
       y: {
-        title : {
+        title: {
           display: true,
-          text: 'CANTIDAD DE SOLICITUDES'
+          text: 'CANTIDAD DE SOLICITUDES',
         },
         min: 0,
       },
@@ -397,7 +415,7 @@ export class RequeststatusComponent implements OnInit {
     plugins: {
       legend: {
         display: true,
-        position: 'right'
+        position: 'right',
       },
       datalabels: {
         anchor: 'end',
