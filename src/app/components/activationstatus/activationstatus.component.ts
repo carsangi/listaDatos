@@ -55,8 +55,8 @@ export class ActivationstatusComponent implements OnInit {
       this.filtrarDepartamentos();
       this.llenarContador();
     });
-    
   }
+  
   buscar() {
     if( this.bd_selector == 1){
       this.getColumn('E');

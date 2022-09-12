@@ -5,6 +5,7 @@ import { ConsultaAPIService } from '../../services/consulta-api.service';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Service } from '../../models/servicios';
 
 @Component({
   selector: 'app-requeststatus',
@@ -32,6 +33,8 @@ export class RequeststatusComponent implements OnInit {
   totalDataSet: number[] = [];
   mainDataSet: number[][] = [];
   labelTable: string[] = [];
+  bd_selector: number = 0;
+
   constructor(private consultaAPIservice: ConsultaAPIService) {}
 
   ngOnInit(): void {}
@@ -41,15 +44,33 @@ export class RequeststatusComponent implements OnInit {
       this.columnDate = res;
       let fechaDesde = moment(this.fechaDesde);
       let fechaHasta = moment(this.fechaHasta);
-      this.filtrarFechas(fechaDesde, fechaHasta);
+      this.filtrarColumna(fechaDesde, fechaHasta);
     });
   }
 
-  buscar() {
-    this.getColumn('B');
+  getDataSQL(columna: string) {
+    let fechaDesde = moment(this.fechaDesde).format('YYYY-MM-DD');
+    let fechaHasta = moment(this.fechaHasta).format('YYYY-MM-DD');
+    this.consultaAPIservice
+      .getConsultaSQL(fechaDesde, fechaHasta, columna)
+      .subscribe((res) => {
+        this.data = res;
+        this.filtrarEstadosOperacion();
+        this.filtrarEstadosRetiro();
+        this.filtrarDepartamentos();
+        this.llenarContador();
+      });
   }
 
-  filtrarFechas(fechaDesde: Moment, fechaHasta: Moment) {
+  buscar() {
+    if (this.bd_selector == 1) {
+      this.getColumn('B');
+    } else if (this.bd_selector == 2) {
+      this.getDataSQL('fechaSolicitud');
+    }
+  }
+
+  filtrarColumna(fechaDesde: Moment, fechaHasta: Moment) {
     let arregloFechas: any = [];
     let diaA: number = fechaDesde.date();
     let mesA: number = fechaDesde.month();
@@ -65,85 +86,95 @@ export class RequeststatusComponent implements OnInit {
       } else {
         let dia = element.date();
         let mes = element.month();
-        let año = element.year();
-        let fechaActual = new Date(año, mes, dia);
+        let anio = element.year();
+        let fechaActual = new Date(anio, mes, dia);
         if (fechaActual >= fechaA && fechaActual <= fechaB) {
-          var objeto = {
-            fecha: fechaActual,
-            rowIndex: row + 1,
-          };
-          arregloFechas.push(objeto);
+          let rowIndex = row + 1;
+          arregloFechas.push(rowIndex);
         }
       }
     }
-    this.divirArreglo(arregloFechas);
+    this.consultarExtremos(arregloFechas.sort(), fechaA, fechaB);
     arregloFechas = [];
   }
 
-  divirArreglo(arregloFechas: Array<any>) {
-    let matrizFecha: any = [];
-    let aux: any = [];
-    let rowAnterior: number;
-    arregloFechas.map((fechaActual: any, index: number) => {
-      if (aux.length == 0) {
-        rowAnterior = fechaActual['rowIndex'];
-        aux.push(fechaActual['rowIndex']);
-      } else {
-        if (fechaActual['rowIndex'] == rowAnterior + 1) {
-          rowAnterior = fechaActual['rowIndex'];
-          aux.push(fechaActual['rowIndex']);
+  consultarExtremos(arregloFechas: any, fechaA: Date, fechaB: Date) {
+    let izquierda = arregloFechas[0];
+    let derecha = arregloFechas[arregloFechas.length - 1];
+    this.consultaAPIservice
+      .getConsultaDatos(izquierda, derecha)
+      .subscribe((res) => {
+        this.data = res;
+        this.filtrarFechas(this.data, fechaA, fechaB);
+      });
+  }
+
+  filtrarFechas(data: object[][], fechaA: Date, fechaB: Date) {
+    let fechaActual, element, dia, mes, anio;
+    let fechaSolicitud: string,
+      fechaActivacion: string,
+      municipio: string,
+      departamento: string,
+      estadoOperacion: string,
+      estadoRetiro: string;
+    let arreglo: Array<Service> = [];
+    let servicio: Service;
+    data.forEach((row) => {
+      if (row[3] != undefined) {
+        if (
+          row[4] == undefined ||
+          row[4].toString() == '' ||
+          row[4].toString() == ' '
+        ) {
+          estadoOperacion = 'SIN ESTADO DE OPERACION';
         } else {
-          matrizFecha.push(aux);
-          aux = [];
-          rowAnterior = fechaActual['rowIndex'];
-          aux.push(fechaActual['rowIndex']);
+          estadoOperacion = row[4].toString();
         }
-        if (index + 1 == arregloFechas.length) {
-          matrizFecha.push(aux);
+        if (
+          row[5] == undefined ||
+          row[5].toString() == '' ||
+          row[5].toString() == ' '
+        ) {
+          estadoRetiro = 'SIN ESTADO DE RETIRO';
+        } else {
+          estadoRetiro = row[5].toString();
+        }
+        fechaSolicitud = row[0].toString();
+        municipio = row[1].toString();
+        departamento = row[2].toString();
+        fechaActivacion = row[3].toString();
+        element = moment(row[0].toString(), 'DD-MM-YYYY');
+        dia = element.date();
+        mes = element.month();
+        anio = element.year();
+        fechaActual = new Date(anio, mes, dia);
+        if (fechaActual >= fechaA && fechaActual <= fechaB) {
+          servicio = {
+            fechaSolicitud: fechaSolicitud,
+            municipio: municipio,
+            departamento: departamento,
+            fechaActivacion: fechaActivacion,
+            estadoOperacion: estadoOperacion,
+            estadoRetiro: estadoRetiro,
+          };
+
+          arreglo.push(servicio);
         }
       }
-      index++;
     });
-    this.consultarDatos(matrizFecha);
-    matrizFecha = [];
-    aux = [];
-    rowAnterior = 0;
+    this.data = arreglo;
+    console.log(this.data);
+    
+    this.filtrarEstadosOperacion();
+    this.filtrarEstadosRetiro();
+    this.filtrarDepartamentos();
+    this.llenarContador();
   }
 
-  consultarDatos(matrizFecha: Array<any>) {
-    this.data = [];
-    for (let i = 0; i < matrizFecha.length; i++) {
-      const subArreglo = matrizFecha[i];
-      let indexInicio = subArreglo[0];
-      let indexFinal = subArreglo[subArreglo.length - 1];
-      this.consultaAPIservice
-        .getConsultaDatos(indexInicio, indexFinal)
-        .subscribe((res) => {
-          this.data.push(res);
-          if (i == matrizFecha.length - 1) {
-            this.filtrarEstadoOperacion();
-            this.filtrarEstadoRetiro();
-            this.filtrarDepartamento();
-            this.llenarContador();
-          }
-        });
-    }
-  }
-
-  filtrarEstadoOperacion() {
+  filtrarEstadosOperacion() {
     let aux: any = [];
     this.data.forEach((element: any) => {
-      element.forEach((element2: any) => {
-        if (
-          element2[4] === undefined ||
-          element2[4] == ' ' ||
-          element2[4] === ''
-        ) {
-          aux.push('');
-        } else {
-          aux.push(element2[4]);
-        }
-      });
+      aux.push(element.estadoOperacion);
     });
     this.estadosOperacion = aux.filter((item: any, index: any) => {
       return aux.indexOf(item.trim()) === index;
@@ -151,34 +182,20 @@ export class RequeststatusComponent implements OnInit {
     this.estadosOperacion.sort();
   }
 
-  filtrarEstadoRetiro() {
+  filtrarEstadosRetiro() {
     let aux: any = [];
     this.data.forEach((element: any) => {
-      element.forEach((element2: any) => {
-        if (
-          element2[5] === undefined ||
-          element2[5] == ' ' ||
-          element2[5] === ''
-        ) {
-          aux.push('');
-        } else {
-          aux.push(element2[5]);
-        }
-      });
+      aux.push(element.estadoRetiro);
     });
     this.estadosRetiro = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
     });
     this.estadosRetiro.sort();
   }
-  filtrarDepartamento() {
+  filtrarDepartamentos() {
     let aux: any = [];
-    let aux2: any = [];
-
     this.data.map((element: any) => {
-      element.forEach((element2: any) => {
-        aux.push(element2[2]);
-      });
+      aux.push(element.departamento);
     });
     this.departamentos = aux.filter((item: any, index: any) => {
       return aux.indexOf(item.trim()) === index;
@@ -186,14 +203,12 @@ export class RequeststatusComponent implements OnInit {
     this.departamentos.sort();
   }
 
-  filtrarMunicipio(departamento: string) {
+  filtrarMunicipios(departamento: string) {
     let aux: any = [];
     this.data.forEach((element: any) => {
-      element.forEach((element2: any) => {
-        if (element2[2] == departamento) {
-          aux.push(element2[1]);
-        }
-      });
+      if (element.departamento == departamento) {
+        aux.push(element.municipio);
+      }
     });
     this.municipios = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
@@ -206,70 +221,51 @@ export class RequeststatusComponent implements OnInit {
     let lDatos = this.estadosOperacion;
     let datos = Array(this.departamentos.length);
     let contadores = Array(this.estadosOperacion.length);
-    let contadorVacios = 0;
-
     if (this.opcionDepartamento == '0') {
       labelGrafica = this.departamentos;
       for (let i = 0; i < this.departamentos.length; i++) {
         contadores.length = this.estadosOperacion.length;
         contadores.fill(0);
-        this.data.map((item: any) => {
-          item.forEach((row: any) => {
-            if (this.departamentos[i] === row[2] && row[4] == undefined) {
-              contadorVacios++;
-            } else {
-              for (let j = 0; j < contadores.length; j++) {
-                if (
-                  this.departamentos[i] === row[2] &&
-                  this.estadosOperacion[j] === row[4]
-                ) {
-                  contadores[j]++;
-                }
-              }
+        this.data.forEach((servicio: any) => {
+          for (let j = 0; j < contadores.length; j++) {
+            if (
+              this.departamentos[i] === servicio.departamento &&
+              this.estadosOperacion[j] === servicio.estadoOperacion
+            ) {
+              contadores[j]++;
             }
-          });
+          }
         });
-
-        if (contadorVacios > 0) {
-          contadores[0] = contadores[0] + contadorVacios;
-          contadorVacios = 0;
-        }
         datos[i] = contadores;
         contadores = [];
       }
     } else if (this.opcionDepartamento != 0) {
-      this.filtrarMunicipio(this.opcionDepartamento);
+      this.filtrarMunicipios(this.opcionDepartamento);
       labelGrafica = this.municipios;
       for (let i = 0; i < this.municipios.length; i++) {
         contadores.length = this.estadosOperacion.length;
         contadores.fill(0);
-        this.data.map((item: any) => {
-          item.forEach((row: any) => {
+        this.data.forEach((servicio: any) => {
+          for (let j = 0; j < contadores.length; j++) {
             if (
-              this.municipios[i] === row[1] &&
-              (row[4] == undefined || row[4] == '')
+              this.municipios[i] === servicio.municipio &&
+              this.estadosOperacion[j] === servicio.estadoOperacion
             ) {
-              contadorVacios++;
-            } else {
-              for (let j = 0; j < contadores.length; j++) {
-                if (
-                  this.municipios[i] === row[1] &&
-                  this.estadosOperacion[j] === row[4]
-                ) {
-                  contadores[j]++;
-                }
-              }
+              contadores[j]++;
             }
-          });
+          }
         });
-
-        if (contadorVacios > 0) {
-          contadores[0] = contadores[0] + contadorVacios;
-          contadorVacios = 0;
-        }
         datos[i] = contadores;
         contadores = [];
       }
+    }
+    for (let i = 0; i < datos.length; i++) {
+      let initialValue = 0;
+      let sumWithInitial = datos[i].reduce(
+        (previousValue: any, currentValue: any) => previousValue + currentValue,
+        initialValue
+      );
+      datos[i].push(sumWithInitial);
     }
     this.crearObjetoDatasetMainChart(labelGrafica, datos, lDatos);
     this.crearObjetoDataSetTotal(labelGrafica, datos, lDatos);
@@ -279,6 +275,7 @@ export class RequeststatusComponent implements OnInit {
     let dataSet: Array<Object> = [];
     let ArregloDatos: Array<number> = [];
     let arregloTabla: Array<Array<number>> = [];
+
     for (let i = 0; i < lDatos.length; i++) {
       for (let j = 0; j < datos.length; j++) {
         let aux = datos[j][i];
@@ -335,7 +332,7 @@ export class RequeststatusComponent implements OnInit {
       if (lDatos[i] == '') {
         let objeto = {
           data: [sumWithInitial],
-          label: 'SIN ESTADO DE OPERACION',
+          label: 'SIN ESTADO DE OPERACIONaa',
         };
         totalizador.push(sumWithInitial);
         dataSet.push(objeto);
@@ -349,8 +346,16 @@ export class RequeststatusComponent implements OnInit {
         ArregloDatos = [];
       }
     }
+
+    let valorInicial = 0;
+    let sumaTotal = totalizador.reduce(
+      (valorAnterior: any, valorActual: any) => valorAnterior + valorActual,
+      valorInicial
+    );
+    arregloLabel.push('TOTAL');
     this.labelTable = arregloLabel;
     this.totalDataSet = totalizador;
+    this.totalDataSet.push(sumaTotal);
     this.llenarSecondChart(dataSet);
   }
 
@@ -391,7 +396,8 @@ export class RequeststatusComponent implements OnInit {
         position: 'right',
       },
       datalabels: {
-        anchor: 'end',
+        color: 'black',
+        anchor: 'center',
         align: 'end',
       },
     },
@@ -418,7 +424,8 @@ export class RequeststatusComponent implements OnInit {
         position: 'right',
       },
       datalabels: {
-        anchor: 'end',
+        color: 'black',
+        anchor: 'center',
         align: 'end',
       },
     },
