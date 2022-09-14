@@ -144,9 +144,9 @@ export class RequeststatusComponent implements OnInit {
           row[3].toString() == '' ||
           row[3].toString() == ' '
         ) {
-          estadoRetiro = 'SIN ESTADO DE ACTIVACION';
+          fechaActivacion = 'SIN ESTADO DE ACTIVACION';
         } else {
-          estadoRetiro = row[3].toString();
+          fechaActivacion = row[3].toString();
         }
         fechaSolicitud = row[0].toString();
         municipio = row[1].toString();
