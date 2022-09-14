@@ -120,7 +120,7 @@ export class RequeststatusComponent implements OnInit {
     let arreglo: Array<Service> = [];
     let servicio: Service;
     data.forEach((row) => {
-      if (row[3] != undefined) {
+      if (row[0] != undefined) {
         if (
           row[4] == undefined ||
           row[4].toString() == '' ||
@@ -139,10 +139,18 @@ export class RequeststatusComponent implements OnInit {
         } else {
           estadoRetiro = row[5].toString();
         }
+        if (
+          row[3] == undefined ||
+          row[3].toString() == '' ||
+          row[3].toString() == ' '
+        ) {
+          estadoRetiro = 'SIN ESTADO DE ACTIVACION';
+        } else {
+          estadoRetiro = row[3].toString();
+        }
         fechaSolicitud = row[0].toString();
         municipio = row[1].toString();
         departamento = row[2].toString();
-        fechaActivacion = row[3].toString();
         element = moment(row[0].toString(), 'DD-MM-YYYY');
         dia = element.date();
         mes = element.month();
@@ -305,6 +313,16 @@ export class RequeststatusComponent implements OnInit {
     this.barChartData1 = {
       labels: labelGrafica,
       datasets: dataSet,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(153, 202, 255, 0.2)',
+        'rgba(255, 109, 64, 0.2)'
+      ],
     };
 
     this.chart?.update();
@@ -396,10 +414,10 @@ export class RequeststatusComponent implements OnInit {
         position: 'right',
       },
       datalabels: {
-        color: 'black',
         anchor: 'center',
         align: 'end',
       },
+
     },
   };
   public barChartType1: ChartType = 'bar';

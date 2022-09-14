@@ -106,6 +106,7 @@ export class ActivationstatusComponent implements OnInit {
   }
 
   filtrarFechas(data: object[][], fechaA: Date, fechaB: Date) {
+    console.log(data);   
     let fechaActual, element, dia, mes, anio;
     let fechaSolicitud: string,
       fechaActivacion: string,
