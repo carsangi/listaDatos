@@ -22,12 +22,6 @@ public barChartData1: ChartData<'bar'> | any | undefined;
   fechaDesde: any;
   fechaHasta: any;
   data: any;
-  estadosOperacion: string[] = [];
-  estadosRetiro: string[] = [];
-  departamentos: string[] = [];
-  municipios: string[] = [];
-  meses: Array<number> = [];
-
   constructor(private consultaAPIservice: ConsultaAPIService) { }
 
   ngOnInit(): void {
@@ -37,7 +31,7 @@ public barChartData1: ChartData<'bar'> | any | undefined;
     this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
       this.columnDate = res;
       let diaDesde = moment(this.fechaDesde).date();
-      let mesDesde = moment(this.fechaDesde).month()-5;
+      let mesDesde = moment(this.fechaDesde).month()-6;
       let anioDesde = moment(this.fechaDesde).year();
       let fechaDesde = moment(`${anioDesde}-${mesDesde}-${diaDesde}`, 'YYYY-MM-DD');
       let fechaHasta = moment(this.fechaHasta);
@@ -47,7 +41,7 @@ public barChartData1: ChartData<'bar'> | any | undefined;
 
   getDataSQL(columna: string) {
     let diaDesde = moment(this.fechaDesde).date();
-    let mesDesde = moment(this.fechaDesde).month()-5;
+    let mesDesde = moment(this.fechaDesde).month()-6;
     let anioDesde = moment(this.fechaDesde).year();
     let fechaDesde = moment(`${anioDesde}-${mesDesde}-${diaDesde}`, 'YYYY-MM-DD');
     let fechaHasta = moment(this.fechaHasta);
@@ -163,12 +157,7 @@ public barChartData1: ChartData<'bar'> | any | undefined;
 
   filtrarFechas(arreglo: Array<Service>,fechaDesde: Moment, fechaHasta: Moment){
     console.log(arreglo);
-    this.filtrarEstadosOperacion(arreglo);
-    this.filtrarEstadosRetiro(arreglo);
-    this.filtrarDepartamentos(arreglo);
-    this.createMonths(fechaDesde, fechaHasta);
-    let matrizTotal: any[][];
-    let cont = 0
+    let matrizMes: any[][];
     let fechaActual: Moment = fechaDesde;
     for(let i=0; fechaActual.month()<= fechaHasta.month(); i++){
       let lastDay = fechaActual.endOf('month').format('YYYY-MM-DD');
@@ -176,80 +165,12 @@ public barChartData1: ChartData<'bar'> | any | undefined;
       arreglo.forEach((item)=>{
         let auxDate = item['fechaSolicitud'];
         if(auxDate>= firstDay && auxDate <= lastDay){
-          if(item['departamento'] == this.departamentos[0]){
-            this.estadosOperacion.forEach((estado:String) => {
-
-            })
-          }
-          /* console.log(auxDate); */
-          cont ++;
+          matrizMes[i].push(auxDate)
         }
       })
       console.log(`${fechaActual.month()} primer dia: ${firstDay} ultimo dia: ${lastDay}`);
       fechaActual.add(1,'M');
     }
-    console.log(cont);
-    console.log(this.estadosOperacion);
-    console.log(this.estadosRetiro);
-    console.log(this.departamentos);
-    console.log(this.meses);
-    
-  }
-
-  createMonths(fechaDesde: Moment, fechaHasta: Moment){
-    let meses: Array<number> = [];
-    meses.length=7;
-    meses.fill(0);
-    let aux = fechaDesde.month()
-    meses.forEach((mes:number,index) =>{
-      meses[index] = aux
-      aux = fechaDesde.subtract(1,'month').month();
-    })
-    this.meses =  meses;
-  }
-
-  filtrarEstadosOperacion(arreglo: Array<Service>) {
-    let aux: any = [];
-    arreglo.forEach((element: any) => {
-      aux.push(element.estadoOperacion);
-    });
-    this.estadosOperacion = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item.trim()) === index;
-    });
-    this.estadosOperacion.sort();
-  }
-
-  filtrarEstadosRetiro(arreglo: Array<Service>) {
-    let aux: any = [];
-    arreglo.forEach((element: any) => {
-      aux.push(element.estadoRetiro);
-    });
-    this.estadosRetiro = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item) === index;
-    });
-    this.estadosRetiro.sort();
-  }
-  filtrarDepartamentos(arreglo: Array<Service>) {
-    let aux: any = [];
-    arreglo.map((element: any) => {
-      aux.push(element.departamento);
-    });
-    this.departamentos = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item.trim()) === index;
-    });
-    this.departamentos.sort();
-  }
-
-  filtrarMunicipios(arreglo: Array<Service>, departamento: string) {
-    let aux: any = [];
-    arreglo.forEach((element: any) => {
-      if (element.departamento == departamento) {
-        aux.push(element.municipio);
-      }
-    });
-    this.municipios = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item) === index;
-    });
-    this.municipios.sort();
+    console.log(matrizMes);
   }
 }
