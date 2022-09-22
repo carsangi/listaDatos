@@ -1,21 +1,27 @@
-<section id = "barra_fecha">
+<section id="barra_fecha">
     <div>
-    <label for="">Base de datos</label><br>
-    <input type="radio" id="sheet" name="bd_selector" value="1" [(ngModel)]="bd_selector">
-    <label for="sheet">Sheet</label><br>
-    <input type="radio" id="sql" name="bd_selector" value="2" [(ngModel)]="bd_selector">
-    <label for="sql">SQL</label><br>
+        <label for="">Base de datos</label><br />
+        <input type="radio" id="sheet" name="bd_selector" value="1" [(ngModel)]="bd_selector" />
+        <label for="sheet">Sheet</label><br />
+        <input type="radio" id="sql" value="2" [(ngModel)]="bd_selector" name="bd_selector" />
+        <label for="sql">SQL</label><br />
     </div>
     <mat-form-field appearance="standard" id="fecha">
-    <mat-label>Fecha</mat-label>
-    <mat-date-range-input [rangePicker]="picker">
-        <input [(ngModel)]="fechaDesde" matStartDate placeholder="D/M/AAAA" />
-        <input [(ngModel)]="fechaHasta" matEndDate placeholder="D/M/AAAA" />
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-label>Fecha</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input [(ngModel)]="fechaDesde" matStartDate placeholder="D/M/AAAA" />
+            <input [(ngModel)]="fechaHasta" matEndDate placeholder="D/M/AAAA" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
     </mat-form-field>
     <i class="bi bi-search" id="buscar" (click)="buscar()">
-    <label for="">Buscar</label>
+        <label for="">Buscar</label>
     </i>
+    <select [(ngModel)]="opcionDepartamento" name="departamento" id="departamento" id="localidad">
+        <option [value]="0">Departamentos</option>
+        <option [value]="" *ngFor="let item of departamentos">
+            {{ item }}
+        </option>
+    </select>
 </section>

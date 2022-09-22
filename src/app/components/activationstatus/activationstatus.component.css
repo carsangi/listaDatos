@@ -108,3 +108,7 @@
       box-sizing: border-box;
       width: 900px;
     }
+
+    #seccionTabla{
+      margin-top: 1em;
+    }

@@ -1,0 +1,109 @@
+body {
+  display: block;
+}
+#barra_titulo {
+  display: flex;
+  justify-content: space-around;
+}
+
+#barra_titulo h1 {
+  font-size: 50px;
+}
+
+#barra_fecha {
+  display: flex;
+  justify-content: space-around;
+}
+
+#localidad {
+  width: 180px;
+  height: 40px;
+  margin-top: 10px;
+}
+mat-form-field {
+  color: #2a2820;
+}
+
+mat-label {
+  color: #2a2820;
+}
+
+mat-datepicker-toggle {
+  color: #2a2820;
+}
+
+mat-form-field:hover {
+  color: #4498ec;
+}
+
+mat-datepicker-toggle:hover {
+  color: #4498ec;
+}
+
+#buscar {
+  width: 180px;
+  height: 40px;
+  padding: 7px;
+  margin-top: 10px;
+  margin-left: 11px;
+  border: 1px solid #2a2820;
+  border-radius: 5px;
+  color: #2a2820;
+  cursor: pointer;
+}
+
+#buscar:hover {
+  border: 1px solid #4498ec;
+  background-color: #4498ec;
+  color: white;
+  cursor: pointer;
+}
+
+#buscar label {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+#fecha {
+  width: 180px;
+  font-size: 14px;
+}
+
+#seccionPage {
+  margin: auto;
+  padding: auto;
+  background-color: whitesmoke;
+}
+
+.radioButton {
+  font-size: medium;
+}
+
+.radioButton label {
+  margin-left: 5px;
+  margin-bottom: 8px;
+}
+
+.radioButton label:hover {
+  color: #4498ec;
+}
+
+/* check box */
+
+.example-section {
+  margin: 12px 0;
+}
+
+.example-margin {
+  margin: 0 12px;
+}
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}
+
+.tamanio {
+  box-sizing: border-box;
+  width: 900px;
+}

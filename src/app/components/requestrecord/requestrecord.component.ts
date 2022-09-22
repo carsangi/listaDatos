@@ -22,6 +22,14 @@ public barChartData1: ChartData<'bar'> | any | undefined;
   fechaDesde: any;
   fechaHasta: any;
   data: any;
+  estadosOperacion: string[] = [];
+  estadosRetiro: string[] = [];
+  departamentos: string[] = [];
+  municipios: string[] = [];
+  meses: Array<number> = [];
+  opcionDepartamento: any = 0;
+  servicios: Array<Service> = [];
+
   constructor(private consultaAPIservice: ConsultaAPIService) { }
 
   ngOnInit(): void {
@@ -49,7 +57,7 @@ public barChartData1: ChartData<'bar'> | any | undefined;
       .getConsultaSQL(fechaDesde.format('YYYY-MM-DD'), fechaHasta.format('YYYY-MM-DD'), columna)
       .subscribe((res) => {
         this.data = res;
-        this.filtrarFechas(this.data, fechaDesde, fechaHasta);
+        this.llenarContador(this.data, fechaDesde, fechaHasta);
       });
   }
 
@@ -152,25 +160,95 @@ public barChartData1: ChartData<'bar'> | any | undefined;
         arreglo.push(servicio);
       }
     });
-    this.filtrarFechas(arreglo, fechaDesde, fechaHasta);
+    this.llenarContador(arreglo, fechaDesde, fechaHasta);
   }
 
-  filtrarFechas(arreglo: Array<Service>,fechaDesde: Moment, fechaHasta: Moment){
-    console.log(arreglo);
-    let matrizMes: any[][];
+  llenarContador(arreglo: Array<Service>, fechaDesde: Moment, fechaHasta: Moment){
     let fechaActual: Moment = fechaDesde;
+    console.log(fechaActual.format('YYYY-MM-DD'));
+    console.log(arreglo);
+    this.filtrarEstadosOperacion(arreglo);
+    this.filtrarEstadosRetiro(arreglo);
+    this.filtrarDepartamentos(arreglo);
+    this.createMonths(fechaDesde, fechaHasta);
+    let matrizTotal: any[][];
+    let cont = 0
+    console.log(fechaActual.format('YYYY-MM-DD'));
     for(let i=0; fechaActual.month()<= fechaHasta.month(); i++){
       let lastDay = fechaActual.endOf('month').format('YYYY-MM-DD');
       let firstDay = fechaActual.startOf('month').format('YYYY-MM-DD');
       arreglo.forEach((item)=>{
         let auxDate = item['fechaSolicitud'];
         if(auxDate>= firstDay && auxDate <= lastDay){
-          matrizMes[i].push(auxDate)
+          cont ++;
         }
       })
       console.log(`${fechaActual.month()} primer dia: ${firstDay} ultimo dia: ${lastDay}`);
       fechaActual.add(1,'M');
     }
-    console.log(matrizMes);
+    console.log(cont);
+    console.log(this.estadosOperacion);
+    console.log(this.estadosRetiro);
+    console.log(this.departamentos);
+    console.log(this.meses);
+    
+  }
+
+  createMonths(fechaDesde: Moment, fechaHasta: Moment){
+    let fecha = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
+    let meses: Array<number> = []; 
+    meses.length=7;
+    meses.fill(0);
+    let aux = fecha.month()
+    meses.forEach((mes:number,index) =>{
+      meses[index] = aux
+      aux = fecha.add(1,'month').month();
+    })
+    this.meses =  meses;
+  }
+
+  filtrarEstadosOperacion(arreglo: Array<Service>) {
+    let aux: any = [];
+    arreglo.forEach((element: any) => {
+      aux.push(element.estadoOperacion);
+    });
+    this.estadosOperacion = aux.filter((item: any, index: any) => {
+      return aux.indexOf(item.trim()) === index;
+    });
+    this.estadosOperacion.sort();
+  }
+
+  filtrarEstadosRetiro(arreglo: Array<Service>) {
+    let aux: any = [];
+    arreglo.forEach((element: any) => {
+      aux.push(element.estadoRetiro);
+    });
+    this.estadosRetiro = aux.filter((item: any, index: any) => {
+      return aux.indexOf(item) === index;
+    });
+    this.estadosRetiro.sort();
+  }
+  filtrarDepartamentos(arreglo: Array<Service>) {
+    let aux: any = [];
+    arreglo.map((element: any) => {
+      aux.push(element.departamento);
+    });
+    this.departamentos = aux.filter((item: any, index: any) => {
+      return aux.indexOf(item.trim()) === index;
+    });
+    this.departamentos.sort();
+  }
+
+  filtrarMunicipios(arreglo: Array<Service>, departamento: string) {
+    let aux: any = [];
+    arreglo.forEach((element: any) => {
+      if (element.departamento == departamento) {
+        aux.push(element.municipio);
+      }
+    });
+    this.municipios = aux.filter((item: any, index: any) => {
+      return aux.indexOf(item) === index;
+    });
+    this.municipios.sort();
   }
 }
