@@ -27,7 +27,7 @@ public barChartData1: ChartData<'bar'> | any | undefined;
   departamentos: string[] = [];
   municipios: string[] = [];
   meses: Array<number> = [];
-  opcionDepartamento: any = 0;
+  opcionMunicipio: any = 0;
   servicios: Array<Service> = [];
 
   constructor(private consultaAPIservice: ConsultaAPIService) { }
@@ -164,19 +164,29 @@ public barChartData1: ChartData<'bar'> | any | undefined;
   }
 
   llenarContador(arreglo: Array<Service>, fechaDesde: Moment, fechaHasta: Moment){
-    let fechaActual: Moment = fechaDesde;
-    console.log(fechaActual.format('YYYY-MM-DD'));
+    let fechaActual: Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
     console.log(arreglo);
     this.filtrarEstadosOperacion(arreglo);
-    this.filtrarEstadosRetiro(arreglo);
-    this.filtrarDepartamentos(arreglo);
+    this.filtrarMunicipios(arreglo);
     this.createMonths(fechaDesde, fechaHasta);
     let matrizTotal: any[][];
     let cont = 0
     console.log(fechaActual.format('YYYY-MM-DD'));
+    if(this.opcionMunicipio == '0'){
+      for(let i = 0; i< this.municipios.length; i++){
+        /* for para cada columa mes */
+        /*  if fechas betwen */
+        /*    for estado operacin */
+        /*      if estado operacion */
+        /*      push contador estado operacion */
+        /*   push en mes */
+        /* push municipio */
+      }
+    }
     for(let i=0; fechaActual.month()<= fechaHasta.month(); i++){
       let lastDay = fechaActual.endOf('month').format('YYYY-MM-DD');
       let firstDay = fechaActual.startOf('month').format('YYYY-MM-DD');
+
       arreglo.forEach((item)=>{
         let auxDate = item['fechaSolicitud'];
         if(auxDate>= firstDay && auxDate <= lastDay){
@@ -188,14 +198,12 @@ public barChartData1: ChartData<'bar'> | any | undefined;
     }
     console.log(cont);
     console.log(this.estadosOperacion);
-    console.log(this.estadosRetiro);
-    console.log(this.departamentos);
     console.log(this.meses);
-    
+    console.log(this.municipios);
   }
 
   createMonths(fechaDesde: Moment, fechaHasta: Moment){
-    let fecha = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
+    let fecha : Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
     let meses: Array<number> = []; 
     meses.length=7;
     meses.fill(0);
@@ -218,33 +226,10 @@ public barChartData1: ChartData<'bar'> | any | undefined;
     this.estadosOperacion.sort();
   }
 
-  filtrarEstadosRetiro(arreglo: Array<Service>) {
+  filtrarMunicipios(arreglo: Array<Service>) {
     let aux: any = [];
     arreglo.forEach((element: any) => {
-      aux.push(element.estadoRetiro);
-    });
-    this.estadosRetiro = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item) === index;
-    });
-    this.estadosRetiro.sort();
-  }
-  filtrarDepartamentos(arreglo: Array<Service>) {
-    let aux: any = [];
-    arreglo.map((element: any) => {
-      aux.push(element.departamento);
-    });
-    this.departamentos = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item.trim()) === index;
-    });
-    this.departamentos.sort();
-  }
-
-  filtrarMunicipios(arreglo: Array<Service>, departamento: string) {
-    let aux: any = [];
-    arreglo.forEach((element: any) => {
-      if (element.departamento == departamento) {
-        aux.push(element.municipio);
-      }
+      aux.push(element.municipio);
     });
     this.municipios = aux.filter((item: any, index: any) => {
       return aux.indexOf(item) === index;
