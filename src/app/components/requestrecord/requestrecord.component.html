@@ -18,10 +18,100 @@
     <i class="bi bi-search" id="buscar" (click)="buscar()">
         <label for="">Buscar</label>
     </i>
-    <select [(ngModel)]="opcionMunicipio" name="municipio" id="municipio" id="localidad">
-        <option [value]="0">Municipios</option>
-        <option [value]="" *ngFor="let item of municipios">
-            {{ item }}
-        </option>
-    </select>
+</section>
+
+<section id="tablaHistorial">
+    <table class="table tamanio" id="tablaTotal">
+        <thead>
+            <tr>
+                <th>Municipios</th>
+                <th>Estado Operacion</th>
+                <th>Septiembre</th>
+                <th>Agosto</th>
+                <th>Julio</th>
+                <th>Junio</th>
+                <th>Mayo</th>
+                <th>Abril</th>
+                <th>Marzo</th>
+                <th>Febrero</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Armenia</th>
+            </tr>
+            <tr>
+                <th> </th>
+                <th>Cancelado</th>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+            </tr>
+            <tr>
+                <th> </th>
+                <th>Instalado</th>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+            </tr>
+            <tr>
+                <th>Montenegro</th>
+            </tr>
+            <tr>
+                <th> </th>
+                <th>Cancelado</th>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+            </tr>
+            <tr>
+                <th> </th>
+                <th>Instalado</th>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+            </tr>
+            <tr>
+                <th>Alcala</th>
+            </tr>
+            <tr>
+                <th> </th>
+                <th>Cancelado</th>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+            </tr>
+            <tr>
+                <th> </th>
+                <th>Instalado</th>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+            </tr>
+        </tbody>
+    </table>
 </section>

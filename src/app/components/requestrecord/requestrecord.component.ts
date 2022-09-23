@@ -27,7 +27,6 @@ public barChartData1: ChartData<'bar'> | any | undefined;
   departamentos: string[] = [];
   municipios: string[] = [];
   meses: Array<number> = [];
-  opcionMunicipio: any = 0;
   servicios: Array<Service> = [];
 
   constructor(private consultaAPIservice: ConsultaAPIService) { }
@@ -164,42 +163,44 @@ public barChartData1: ChartData<'bar'> | any | undefined;
   }
 
   llenarContador(arreglo: Array<Service>, fechaDesde: Moment, fechaHasta: Moment){
-    let fechaActual: Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
-    console.log(arreglo);
     this.filtrarEstadosOperacion(arreglo);
     this.filtrarMunicipios(arreglo);
     this.createMonths(fechaDesde, fechaHasta);
-    let matrizTotal: any[][];
-    let cont = 0
-    console.log(fechaActual.format('YYYY-MM-DD'));
-    if(this.opcionMunicipio == '0'){
-      for(let i = 0; i< this.municipios.length; i++){
-        /* for para cada columa mes */
-        /*  if fechas betwen */
-        /*    for estado operacin */
-        /*      if estado operacion */
-        /*      push contador estado operacion */
-        /*   push en mes */
-        /* push municipio */
+    let historial:Array<Array<Array<number>>> = Array(this.municipios.length);
+    let datos: Array<Array<number>> = Array(this.meses.length);
+    let contadores: Array<number> = Array(this.estadosOperacion.length);
+    let cont = 0;
+    historial.length = this.municipios.length;
+    this.municipios.forEach((municipio, index2) =>{
+      let fechaActual: Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
+      datos.length = this.meses.length;
+      datos.fill([0]);
+      for(let l=0; fechaActual.month()<= fechaHasta.month(); l++){
+        let firstDay = moment(fechaActual.startOf('month'),'YYYY-MM-DD');
+        let lastDay = moment(fechaActual.endOf('month'),'YYYY-MM-DD');
+        contadores.length = this.estadosOperacion.length;
+        contadores.fill(0)
+        arreglo.forEach((servicio: Service)=>{
+          let auxDate = moment(servicio['fechaSolicitud'],'YYYY-MM-DD'); 
+          if(auxDate>= firstDay && auxDate <= lastDay){
+            this.estadosOperacion.forEach((estadoOperacion,index) =>{
+              if(servicio['estadoOperacion'] == estadoOperacion && servicio['municipio'] == municipio){
+                contadores[index]++;
+                cont++
+              }
+            })
+          }
+        })
+        contadores.push(cont);
+        cont = 0;
+        datos[l] = contadores;
+        contadores = [];
+        fechaActual.add(1,'M');
       }
-    }
-    for(let i=0; fechaActual.month()<= fechaHasta.month(); i++){
-      let lastDay = fechaActual.endOf('month').format('YYYY-MM-DD');
-      let firstDay = fechaActual.startOf('month').format('YYYY-MM-DD');
-
-      arreglo.forEach((item)=>{
-        let auxDate = item['fechaSolicitud'];
-        if(auxDate>= firstDay && auxDate <= lastDay){
-          cont ++;
-        }
-      })
-      console.log(`${fechaActual.month()} primer dia: ${firstDay} ultimo dia: ${lastDay}`);
-      fechaActual.add(1,'M');
-    }
-    console.log(cont);
-    console.log(this.estadosOperacion);
-    console.log(this.meses);
-    console.log(this.municipios);
+      historial[index2] = datos;
+      datos = []
+    })
+    console.log(historial);
   }
 
   createMonths(fechaDesde: Moment, fechaHasta: Moment){
