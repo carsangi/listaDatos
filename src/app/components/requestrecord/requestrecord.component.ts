@@ -5,6 +5,8 @@ import { ConsultaAPIService } from '../../services/consulta-api.service';
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import 'moment/locale/es-mx'
+moment.locale('es-mx');
 import { Service } from '../../models/servicios';
 
 @Component({
@@ -13,8 +15,6 @@ import { Service } from '../../models/servicios';
   styleUrls: ['./requestrecord.component.css']
 })
 export class RequestrecordComponent implements OnInit {
-public barChartData1: ChartData<'bar'> | any | undefined;
-  public barChartData2: ChartData<'bar'> | any | undefined;
   @HostBinding('class') classes = 'container';
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
   columnDate: any = [];
@@ -27,7 +27,9 @@ public barChartData1: ChartData<'bar'> | any | undefined;
   departamentos: string[] = [];
   municipios: string[] = [];
   meses: Array<number> = [];
+  stringMeses: Array<string> = [];
   servicios: Array<Service> = [];
+  historial:Array<Array<Array<number>>> = [];
 
   constructor(private consultaAPIservice: ConsultaAPIService) { }
 
@@ -200,13 +202,15 @@ public barChartData1: ChartData<'bar'> | any | undefined;
       historial[index2] = datos;
       datos = []
     })
-    console.log(historial);
+    this.historial = historial;
+    console.log(this.historial);
+    
   }
 
   createMonths(fechaDesde: Moment, fechaHasta: Moment){
     let fecha : Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
     let meses: Array<number> = []; 
-    meses.length=7;
+    meses.length=8;
     meses.fill(0);
     let aux = fecha.month()
     meses.forEach((mes:number,index) =>{
@@ -214,8 +218,19 @@ public barChartData1: ChartData<'bar'> | any | undefined;
       aux = fecha.add(1,'month').month();
     })
     this.meses =  meses;
+    this.stringMonth(meses);
+
   }
 
+  stringMonth(meses: Array<number>){
+    let stringMeses: Array<string> = [];
+    let aux: string;
+    meses.map(mes =>{
+      aux = moment(`2022-${mes+1}-01`,'YYYY-MM-DD').format('MMMM');
+      stringMeses.push(aux);
+    })
+    this.stringMeses = stringMeses;  
+  }
   filtrarEstadosOperacion(arreglo: Array<Service>) {
     let aux: any = [];
     arreglo.forEach((element: any) => {
@@ -233,7 +248,7 @@ public barChartData1: ChartData<'bar'> | any | undefined;
       aux.push(element.municipio);
     });
     this.municipios = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item) === index;
+      return aux.indexOf(item.trim()) === index;
     });
     this.municipios.sort();
   }

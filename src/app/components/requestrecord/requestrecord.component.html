@@ -1,3 +1,6 @@
+<section id="barra_titulo">
+    <h1>Historial estados de las Solicitudes de Servicios</h1>
+  </section>
 <section id="barra_fecha">
     <div>
         <label for="">Base de datos</label><br />
@@ -25,92 +28,23 @@
         <thead>
             <tr>
                 <th>Municipios</th>
-                <th>Estado Operacion</th>
-                <th>Septiembre</th>
-                <th>Agosto</th>
-                <th>Julio</th>
-                <th>Junio</th>
-                <th>Mayo</th>
-                <th>Abril</th>
-                <th>Marzo</th>
-                <th>Febrero</th>
+                <th class="estadoOperacionClass">Estado Operacion</th>
+                <th *ngFor="let mes of stringMeses">{{mes}}</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th>Armenia</th>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>Cancelado</th>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>Instalado</th>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-            </tr>
-            <tr>
-                <th>Montenegro</th>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>Cancelado</th>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>Instalado</th>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-            </tr>
-            <tr>
-                <th>Alcala</th>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>Cancelado</th>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-            </tr>
-            <tr>
-                <th> </th>
-                <th>Instalado</th>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
+            <tr *ngFor="let municipio of municipios">
+                <td>{{municipio}}
+                </td>
+                <td >
+                    <tr class="estadoOperacionClass" *ngFor="let estado of estadosOperacion; let i = index" > {{estado}}</tr>
+                    <tr >TOTAL</tr>
+                </td>
+            <td *ngFor="let municipio of historial;let i = index">
+                <tr style="text-align: center;" *ngFor="let estado of municipio[i]">
+                    {{estado}}
+                </tr>
+            </td>
             </tr>
         </tbody>
     </table>

@@ -3,7 +3,7 @@ body {
 }
 #barra_titulo {
   display: flex;
-  justify-content: space-around;
+  text-align: center;
 }
 
 #barra_titulo h1 {
@@ -69,7 +69,9 @@ mat-datepicker-toggle:hover {
   font-size: 14px;
 }
 
-#seccionPage {
+#tablaHistorial {
+  display: flex;
+  justify-content: center;
   margin: auto;
   padding: auto;
   background-color: whitesmoke;
@@ -103,7 +105,33 @@ ul {
   margin-top: 4px;
 }
 
-.tamanio {
-  box-sizing: border-box;
-  width: 900px;
+#tablaTotal{
+  margin: 0;
+}
+
+#tablaTotal{
+  height: 80px;
+  width: 100%;
+}
+
+th {
+  height: 30px;
+  width: 10px;
+}
+
+td{
+  border-bottom: whitesmoke solid 1px;
+  border-collapse: collapse;
+  height: 30px;
+  width: 10px;
+}
+
+tr{
+  border-collapse: collapse;
+  height: 30px;
+  width: 10px;
+}
+
+.estadoOperacionClass{
+  width: 400px;
 }

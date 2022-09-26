@@ -206,7 +206,7 @@ export class ActivationstatusComponent implements OnInit {
       }
     });
     this.municipios = aux.filter((item: any, index: any) => {
-      return aux.indexOf(item) === index;
+      return aux.indexOf(item.trim()) === index;
     });
     this.municipios.sort();
   }

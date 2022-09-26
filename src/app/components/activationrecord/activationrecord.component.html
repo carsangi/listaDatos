@@ -1,1 +1,51 @@
-<p>activationrecord works!</p>
+<section id="barra_titulo">
+    <h1>Historial de los estados de las Activaciones de Servicios</h1>
+</section>
+<section id="barra_fecha">
+    <div>
+        <label for="">Base de datos</label><br />
+        <input type="radio" id="sheet" name="bd_selector" value="1" [(ngModel)]="bd_selector" />
+        <label for="sheet">Sheet</label><br />
+        <input type="radio" id="sql" value="2" [(ngModel)]="bd_selector" name="bd_selector" />
+        <label for="sql">SQL</label><br />
+    </div>
+    <mat-form-field appearance="standard" id="fecha">
+        <mat-label>Fecha</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input [(ngModel)]="fechaDesde" matStartDate placeholder="D/M/AAAA" />
+            <input [(ngModel)]="fechaHasta" matEndDate placeholder="D/M/AAAA" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <i class="bi bi-search" id="buscar" (click)="buscar()">
+        <label for="">Buscar</label>
+    </i>
+</section>
+
+<section id="tablaHistorial">
+    <table class="table tamanio" id="tablaTotal">
+        <thead>
+            <tr>
+                <th>Municipios</th>
+                <th class="estadoOperacionClass">Estado Operacion</th>
+                <th *ngFor="let mes of stringMeses">{{mes}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let municipio of municipios">
+                <td>{{municipio}}
+                </td>
+                <td>
+            <tr class="estadoOperacionClass" *ngFor="let estado of estadosOperacion; let i = index"> {{estado}}</tr>
+            <tr>TOTAL</tr>
+            </td>
+            <td *ngFor="let municipio of historial;let i = index">
+                <tr style="text-align: center;" *ngFor="let estado of municipio[i]">
+                    {{estado}}
+                </tr>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
