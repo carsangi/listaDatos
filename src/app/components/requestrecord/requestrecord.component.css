@@ -115,12 +115,13 @@ ul {
 }
 
 th {
+  border-bottom: black solid 1px;
   height: 30px;
   width: 10px;
 }
 
 td{
-  border-bottom: whitesmoke solid 1px;
+  border-bottom: black solid 1px;
   border-collapse: collapse;
   height: 30px;
   width: 10px;
@@ -132,6 +133,9 @@ tr{
   width: 10px;
 }
 
+table,th,td{
+  border: 1px solid;
+}
 .estadoOperacionClass{
   width: 400px;
 }

@@ -1,6 +1,6 @@
 <section id="barra_titulo">
     <h1>Historial estados de las Solicitudes de Servicios</h1>
-  </section>
+</section>
 <section id="barra_fecha">
     <div>
         <label for="">Base de datos</label><br />
@@ -24,7 +24,7 @@
 </section>
 
 <section id="tablaHistorial">
-    <table class="table tamanio" id="tablaTotal">
+    <!-- <table class="table tamanio" id="tablaTotal">
         <thead>
             <tr>
                 <th>Municipios</th>
@@ -45,6 +45,36 @@
                     {{estado}}
                 </tr>
             </td>
+            </tr>
+        </tbody>
+    </table> -->
+
+    <!-- tabla2 -->
+    <table *ngIf="busqueda == 1">
+        <thead>
+            <th>Municipio</th>
+            <th>Historial</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let municipio of municipios let i = index">
+                <th>{{municipio}}</th>
+                <table>
+                    <thead>
+                        <th>Estado Operacion</th>
+                        <th *ngFor="let mes of stringMeses">{{mes}}</th>
+                    </thead> 
+                    <tbody>
+                        <tr *ngFor="let estado of estadosOperacion; let j = index">
+                            <th>{{estado}}</th> 
+                            <td *ngFor="let historial of tabla[i]">
+                                <tr>
+                                    {{historial[j]}}
+                                </tr>  
+                        </td>
+                        <tr>Total</tr>
+                        <td>{{tabla[i][estadosOperacion.length]}}</td>
+                    </tbody>
+                </table>
             </tr>
         </tbody>
     </table>

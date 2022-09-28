@@ -29,7 +29,8 @@ export class RequestrecordComponent implements OnInit {
   meses: Array<number> = [];
   stringMeses: Array<string> = [];
   servicios: Array<Service> = [];
-  historial:Array<Array<Array<number>>> = [];
+  tabla:Array<Array<Array<number>>> = [];
+  busqueda: number = 0;
 
   constructor(private consultaAPIservice: ConsultaAPIService) { }
 
@@ -168,15 +169,15 @@ export class RequestrecordComponent implements OnInit {
     this.filtrarEstadosOperacion(arreglo);
     this.filtrarMunicipios(arreglo);
     this.createMonths(fechaDesde, fechaHasta);
-    let historial:Array<Array<Array<number>>> = Array(this.municipios.length);
-    let datos: Array<Array<number>> = Array(this.meses.length);
+    let tabla:Array<Array<Array<number>>> = Array(this.municipios.length);
+    let historial: Array<Array<number>> = Array(this.meses.length);
     let contadores: Array<number> = Array(this.estadosOperacion.length);
     let cont = 0;
-    historial.length = this.municipios.length;
+    tabla.length = this.municipios.length;
     this.municipios.forEach((municipio, index2) =>{
       let fechaActual: Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
-      datos.length = this.meses.length;
-      datos.fill([0]);
+      historial.length = this.meses.length;
+      historial.fill([0]);
       for(let l=0; fechaActual.month()<= fechaHasta.month(); l++){
         let firstDay = moment(fechaActual.startOf('month'),'YYYY-MM-DD');
         let lastDay = moment(fechaActual.endOf('month'),'YYYY-MM-DD');
@@ -195,16 +196,17 @@ export class RequestrecordComponent implements OnInit {
         })
         contadores.push(cont);
         cont = 0;
-        datos[l] = contadores;
+        historial[l] = contadores;
         contadores = [];
         fechaActual.add(1,'M');
       }
-      historial[index2] = datos;
-      datos = []
+      tabla[index2] = historial;
+      historial = []
     })
-    this.historial = historial;
-    console.log(this.historial);
     
+    this.tabla = tabla;
+    console.log(this.tabla);
+    this.busqueda = 1;
   }
 
   createMonths(fechaDesde: Moment, fechaHasta: Moment){
