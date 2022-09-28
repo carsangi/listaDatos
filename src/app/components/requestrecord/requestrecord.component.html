@@ -24,32 +24,6 @@
 </section>
 
 <section id="tablaHistorial">
-    <!-- <table class="table tamanio" id="tablaTotal">
-        <thead>
-            <tr>
-                <th>Municipios</th>
-                <th class="estadoOperacionClass">Estado Operacion</th>
-                <th *ngFor="let mes of stringMeses">{{mes}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let municipio of municipios">
-                <td>{{municipio}}
-                </td>
-                <td >
-                    <tr class="estadoOperacionClass" *ngFor="let estado of estadosOperacion; let i = index" > {{estado}}</tr>
-                    <tr >TOTAL</tr>
-                </td>
-            <td *ngFor="let municipio of historial;let i = index">
-                <tr style="text-align: center;" *ngFor="let estado of municipio[i]">
-                    {{estado}}
-                </tr>
-            </td>
-            </tr>
-        </tbody>
-    </table> -->
-
-    <!-- tabla2 -->
     <table *ngIf="busqueda == 1" class="table tamanio" id="tablaTotal">
         <thead>
             <th style = "text-align: center;">Municipio</th>
@@ -67,7 +41,7 @@
                         <tr *ngFor="let estado of estadosOperacion; let j = index">
                             <th class="estadoOperacionClass">{{estado}}</th> 
                             <td align = " right;" *ngFor="let historial of tabla[i]">
-                                <tr >
+                                <tr>
                                     {{historial[j]}}
                                 </tr>  
                         </td>

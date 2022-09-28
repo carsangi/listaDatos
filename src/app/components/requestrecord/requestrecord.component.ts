@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ConsultaAPIService } from '../../services/consulta-api.service';
-import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import 'moment/locale/es-mx'

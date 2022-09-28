@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { ConsultaAPIService } from '../../services/consulta-api.service';
-import DataLabelsPlugin from 'chartjs-plugin-datalabels';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import 'moment/locale/es-mx';
+import 'moment/locale/es-mx'
 moment.locale('es-mx');
 import { Service } from '../../models/servicios';
 
@@ -29,22 +27,21 @@ export class ActivationrecordComponent implements OnInit {
   meses: Array<number> = [];
   stringMeses: Array<string> = [];
   servicios: Array<Service> = [];
-  historial: Array<Array<Array<number>>> = [];
+  tabla:Array<Array<Array<number>>> = [];
+  busqueda: number = 0;
 
-  constructor(private consultaAPIservice: ConsultaAPIService) {}
+  constructor(private consultaAPIservice: ConsultaAPIService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   getColumn(column: string) {
     this.consultaAPIservice.getConsultaColumnas(column).subscribe((res) => {
       this.columnDate = res;
       let diaDesde = moment(this.fechaDesde).date();
-      let mesDesde = moment(this.fechaDesde).month() - 6;
+      let mesDesde = moment(this.fechaDesde).month()-6;
       let anioDesde = moment(this.fechaDesde).year();
-      let fechaDesde = moment(
-        `${anioDesde}-${mesDesde}-${diaDesde}`,
-        'YYYY-MM-DD'
-      );
+      let fechaDesde = moment(`${anioDesde}-${mesDesde}-${diaDesde}`, 'YYYY-MM-DD');
       let fechaHasta = moment(this.fechaHasta);
       this.filtrarColumna(fechaDesde, fechaHasta);
     });
@@ -52,19 +49,12 @@ export class ActivationrecordComponent implements OnInit {
 
   getDataSQL(columna: string) {
     let diaDesde = moment(this.fechaDesde).date();
-    let mesDesde = moment(this.fechaDesde).month() - 6;
+    let mesDesde = moment(this.fechaDesde).month()-6;
     let anioDesde = moment(this.fechaDesde).year();
-    let fechaDesde = moment(
-      `${anioDesde}-${mesDesde}-${diaDesde}`,
-      'YYYY-MM-DD'
-    );
+    let fechaDesde = moment(`${anioDesde}-${mesDesde}-${diaDesde}`, 'YYYY-MM-DD');
     let fechaHasta = moment(this.fechaHasta);
     this.consultaAPIservice
-      .getConsultaSQL(
-        fechaDesde.format('YYYY-MM-DD'),
-        fechaHasta.format('YYYY-MM-DD'),
-        columna
-      )
+      .getConsultaSQL(fechaDesde.format('YYYY-MM-DD'), fechaHasta.format('YYYY-MM-DD'), columna)
       .subscribe((res) => {
         this.data = res;
         this.llenarContador(this.data, fechaDesde, fechaHasta);
@@ -107,11 +97,7 @@ export class ActivationrecordComponent implements OnInit {
     arregloFechas = [];
   }
 
-  consultarExtremos(
-    arregloFechas: any,
-    fechaDesde: Moment,
-    fechaHasta: Moment
-  ) {
+  consultarExtremos(arregloFechas: any, fechaDesde: Moment, fechaHasta: Moment) {
     let izquierda = arregloFechas[0];
     let derecha = arregloFechas[arregloFechas.length - 1];
     this.consultaAPIservice
@@ -122,7 +108,7 @@ export class ActivationrecordComponent implements OnInit {
       });
   }
 
-  crearObjeto(fechaDesde: Moment, fechaHasta: Moment) {
+  crearObjeto(fechaDesde: Moment, fechaHasta: Moment){
     let fechaSolicitud: string,
       fechaActivacion: string,
       municipio: string,
@@ -131,7 +117,7 @@ export class ActivationrecordComponent implements OnInit {
       estadoRetiro: string;
     let arreglo: Array<Service> = [];
     let servicio: Service;
-    this.data.forEach((element: object[]) => {
+    this.data.forEach((element: object[]) =>{
       if (element[0] != undefined) {
         if (
           element[4] == undefined ||
@@ -158,13 +144,9 @@ export class ActivationrecordComponent implements OnInit {
         ) {
           fechaActivacion = 'SIN ESTADO DE ACTIVACION';
         } else {
-          fechaActivacion = moment(element[3].toString(), 'DD/MM/YYYY').format(
-            'YYYY-MM-DD'
-          );
+          fechaActivacion = moment(element[3].toString(),'DD/MM/YYYY').format('YYYY-MM-DD');
         }
-        fechaSolicitud = moment(element[0].toString(), 'DD/MM/YYYY').format(
-          'YYYY-MM-DD'
-        );
+        fechaSolicitud = moment(element[0].toString(),'DD/MM/YYYY').format('YYYY-MM-DD');
         municipio = element[1].toString();
         departamento = element[2].toString();
         servicio = {
@@ -178,87 +160,75 @@ export class ActivationrecordComponent implements OnInit {
         arreglo.push(servicio);
       }
     });
-    console.log(arreglo);
-    
     this.llenarContador(arreglo, fechaDesde, fechaHasta);
   }
 
-  llenarContador(
-    arreglo: Array<Service>,
-    fechaDesde: Moment,
-    fechaHasta: Moment
-  ) {
+  llenarContador(arreglo: Array<Service>, fechaDesde: Moment, fechaHasta: Moment){
     this.filtrarEstadosOperacion(arreglo);
     this.filtrarMunicipios(arreglo);
     this.createMonths(fechaDesde, fechaHasta);
-    let historial: Array<Array<Array<number>>> = Array(this.municipios.length);
-    let datos: Array<Array<number>> = Array(this.meses.length);
+    let tabla:Array<Array<Array<number>>> = Array(this.municipios.length);
+    let historial: Array<Array<number>> = Array(this.meses.length);
     let contadores: Array<number> = Array(this.estadosOperacion.length);
     let cont = 0;
-    historial.length = this.municipios.length;
-    this.municipios.forEach((municipio, index2) => {
-      let fechaActual: Moment = moment(
-        fechaDesde.format('YYYY-MM-DD'),
-        'YYYY-MM-DD'
-      );
-      datos.length = this.meses.length;
-      datos.fill([0]);
-      for (let l = 0; fechaActual.month() <= fechaHasta.month(); l++) {
-        let firstDay = moment(fechaActual.startOf('month'), 'YYYY-MM-DD');
-        let lastDay = moment(fechaActual.endOf('month'), 'YYYY-MM-DD');
+    tabla.length = this.municipios.length;
+    this.municipios.forEach((municipio, index2) =>{
+      let fechaActual: Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
+      historial.length = this.meses.length;
+      historial.fill([0]);
+      for(let l=0; fechaActual.month()<= fechaHasta.month(); l++){
+        let firstDay = moment(fechaActual.startOf('month'),'YYYY-MM-DD');
+        let lastDay = moment(fechaActual.endOf('month'),'YYYY-MM-DD');
         contadores.length = this.estadosOperacion.length;
-        contadores.fill(0);
-        arreglo.forEach((servicio: Service) => {
-          let auxDate = moment(servicio['fechaActivacion'], 'YYYY-MM-DD');
-          if (auxDate >= firstDay && auxDate <= lastDay) {
-            this.estadosOperacion.forEach((estadoOperacion, index) => {
-              if (
-                servicio['estadoOperacion'] == estadoOperacion &&
-                servicio['municipio'] == municipio
-              ) {
+        contadores.fill(0)
+        arreglo.forEach((servicio: Service)=>{
+          let auxDate = moment(servicio['fechaActivacion'],'YYYY-MM-DD'); 
+          if(auxDate>= firstDay && auxDate <= lastDay){
+            this.estadosOperacion.forEach((estadoOperacion,index) =>{
+              if(servicio['estadoOperacion'] == estadoOperacion && servicio['municipio'] == municipio){
                 contadores[index]++;
-                cont++;
+                cont++
               }
-            });
+            })
           }
-        });
-        contadores.push(cont);
+        })
+        contadores[contadores.length-1]=cont;
         cont = 0;
-        datos[l] = contadores;
+        historial[l] = contadores;
         contadores = [];
-        fechaActual.add(1, 'M');
+        fechaActual.add(1,'M');
       }
-      historial[index2] = datos;
-      datos = [];
-    });
-    this.historial = historial;
-    console.log(this.historial);
-    console.log(this.municipios);
+      tabla[index2] = historial;
+      historial = []
+    })
     
+    this.tabla = tabla;
+    this.busqueda = 1;
   }
 
-  createMonths(fechaDesde: Moment, fechaHasta: Moment) {
-    let fecha: Moment = moment(fechaDesde.format('YYYY-MM-DD'), 'YYYY-MM-DD');
-    let meses: Array<number> = [];
-    meses.length = 8;
+  createMonths(fechaDesde: Moment, fechaHasta: Moment){
+    let fecha : Moment = moment(fechaDesde.format('YYYY-MM-DD'),'YYYY-MM-DD');
+    let meses: Array<number> = []; 
+    meses.length=8;
     meses.fill(0);
-    let aux = fecha.month();
-    meses.forEach((mes: number, index) => {
-      meses[index] = aux;
-      aux = fecha.add(1, 'month').month();
-    });
-    this.meses = meses;
+    let aux = fecha.month()
+    meses.forEach((mes:number,index) =>{
+      meses[index] = aux
+      aux = fecha.add(1,'month').month();
+    })
+    this.meses =  meses;
     this.stringMonth(meses);
+
   }
 
-  stringMonth(meses: Array<number>) {
+  stringMonth(meses: Array<number>){
     let stringMeses: Array<string> = [];
     let aux: string;
-    meses.map((mes) => {
-      aux = moment(`2022-${mes + 1}-01`, 'YYYY-MM-DD').format('MMMM');
+    meses.map(mes =>{
+      aux = moment(`2022-${mes+1}-01`,'YYYY-MM-DD').format('MMMM');
       stringMeses.push(aux);
-    });
-    this.stringMeses = stringMeses;
+    })
+    this.stringMeses = stringMeses;  
   }
   filtrarEstadosOperacion(arreglo: Array<Service>) {
     let aux: any = [];
@@ -269,6 +239,7 @@ export class ActivationrecordComponent implements OnInit {
       return aux.indexOf(item.trim()) === index;
     });
     this.estadosOperacion.sort();
+    this.estadosOperacion.push("TOTAL")
   }
 
   filtrarMunicipios(arreglo: Array<Service>) {
