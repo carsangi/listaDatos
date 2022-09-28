@@ -35,7 +35,7 @@
                 <table id="tabla2">
                     <thead>
                         <th class="estadoOperacionClass" >Estado Operacion</th>
-                        <th *ngFor="let mes of stringMeses">{{mes}}</th>
+                        <th class="mesesClass" *ngFor="let mes of stringMeses">{{mes}}</th>
                     </thead> 
                     <tbody>
                         <tr *ngFor="let estado of estadosOperacion; let j = index">
