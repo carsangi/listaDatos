@@ -194,7 +194,7 @@ export class RequestrecordComponent implements OnInit {
             })
           }
         })
-        contadores.push(cont);
+        contadores[contadores.length-1]=cont;
         cont = 0;
         historial[l] = contadores;
         contadores = [];
@@ -205,7 +205,6 @@ export class RequestrecordComponent implements OnInit {
     })
     
     this.tabla = tabla;
-    console.log(this.tabla);
     this.busqueda = 1;
   }
 
@@ -242,6 +241,7 @@ export class RequestrecordComponent implements OnInit {
       return aux.indexOf(item.trim()) === index;
     });
     this.estadosOperacion.sort();
+    this.estadosOperacion.push("TOTAL")
   }
 
   filtrarMunicipios(arreglo: Array<Service>) {

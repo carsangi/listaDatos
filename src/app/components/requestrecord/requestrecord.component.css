@@ -137,5 +137,9 @@ table,th,td{
   border: 1px solid;
 }
 .estadoOperacionClass{
-  width: 400px;
+  width: 300px;
+}
+
+#tabla2{
+  width: 100%;
 }

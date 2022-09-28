@@ -50,29 +50,27 @@
     </table> -->
 
     <!-- tabla2 -->
-    <table *ngIf="busqueda == 1">
+    <table *ngIf="busqueda == 1" class="table tamanio" id="tablaTotal">
         <thead>
-            <th>Municipio</th>
-            <th>Historial</th>
+            <th style = "text-align: center;">Municipio</th>
+            <th style = "text-align: center;">Historial</th>
         </thead>
         <tbody>
             <tr *ngFor="let municipio of municipios let i = index">
                 <th>{{municipio}}</th>
-                <table>
+                <table id="tabla2">
                     <thead>
-                        <th>Estado Operacion</th>
+                        <th class="estadoOperacionClass" >Estado Operacion</th>
                         <th *ngFor="let mes of stringMeses">{{mes}}</th>
                     </thead> 
                     <tbody>
                         <tr *ngFor="let estado of estadosOperacion; let j = index">
-                            <th>{{estado}}</th> 
-                            <td *ngFor="let historial of tabla[i]">
-                                <tr>
+                            <th class="estadoOperacionClass">{{estado}}</th> 
+                            <td align = " right;" *ngFor="let historial of tabla[i]">
+                                <tr >
                                     {{historial[j]}}
                                 </tr>  
                         </td>
-                        <tr>Total</tr>
-                        <td>{{tabla[i][estadosOperacion.length]}}</td>
                     </tbody>
                 </table>
             </tr>
