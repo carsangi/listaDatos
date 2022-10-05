@@ -27,7 +27,9 @@ export class RequestrecordComponent implements OnInit {
   meses: Array<number> = [];
   stringMeses: Array<string> = [];
   servicios: Array<Service> = [];
-  tabla:Array<Array<Array<number>>> = [];
+  mainTable:Array<Array<Array<number>>> = [];
+  requestByCitiesTable: Array<Array<number>> = [];
+  requestByMonthTable: Array<Array<number>> = [];
   busqueda: number = 0;
 
   constructor(private consultaAPIservice: ConsultaAPIService) { }
@@ -57,7 +59,7 @@ export class RequestrecordComponent implements OnInit {
       .getConsultaSQL(fechaDesde.format('YYYY-MM-DD'), fechaHasta.format('YYYY-MM-DD'), columna)
       .subscribe((res) => {
         this.data = res;
-        this.llenarContador(this.data, fechaDesde, fechaHasta);
+        this.createMainTable(this.data, fechaDesde, fechaHasta);
       });
   }
 
@@ -160,10 +162,10 @@ export class RequestrecordComponent implements OnInit {
         arreglo.push(servicio);
       }
     });
-    this.llenarContador(arreglo, fechaDesde, fechaHasta);
+    this.createMainTable(arreglo, fechaDesde, fechaHasta);
   }
 
-  llenarContador(arreglo: Array<Service>, fechaDesde: Moment, fechaHasta: Moment){
+  createMainTable(arreglo: Array<Service>, fechaDesde: Moment, fechaHasta: Moment){
     this.filtrarEstadosOperacion(arreglo);
     this.filtrarMunicipios(arreglo);
     this.createMonths(fechaDesde, fechaHasta);
@@ -202,8 +204,52 @@ export class RequestrecordComponent implements OnInit {
       historial = []
     })
     
-    this.tabla = tabla;
+    this.mainTable = tabla;
+    this.createStatusVMonthTable(tabla);
+    this.createRequestVMonthTable(tabla);
     this.busqueda = 1;
+  }
+
+  createStatusVMonthTable(tabla: number[][][]){
+    let matriz: Array<number[]> = [];
+    let totalValores;
+    let aux: number[];
+    this.meses.forEach((mes, index)=>{
+      aux = []
+      tabla.forEach(mun =>{
+        aux.push(mun[index][this.estadosOperacion.length-1]);
+      })
+      totalValores = aux.reduce(
+        (previousValue: any, currentValue: any) => previousValue + currentValue,
+        0
+      );
+      aux.push(totalValores);
+      matriz.push(aux)
+    })
+    this.requestByCitiesTable = matriz;
+  }
+
+  createRequestVMonthTable(tabla: number[][][]){
+    let contadores: number[] = [];
+    let matriz: Array<number[]> = [];
+    let totalValores;
+    let aux: number[]
+    this.meses.forEach((mes, index)=>{
+      contadores=[];
+      this.estadosOperacion.forEach((estado, index2)=>{
+        aux = [];
+        tabla.forEach((mun)=>{
+          aux.push(mun[index][index2])
+        })
+        totalValores = aux.reduce(
+          (previousValue: any, currentValue: any) => previousValue + currentValue,
+          0
+        );
+        contadores.push(totalValores);
+      })
+      matriz.push(contadores);
+    })
+    this.requestByMonthTable = matriz;
   }
 
   createMonths(fechaDesde: Moment, fechaHasta: Moment){
