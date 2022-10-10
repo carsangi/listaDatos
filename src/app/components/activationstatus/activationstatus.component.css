@@ -69,7 +69,11 @@
       font-size: 14px;
     }
   
-    #seccionPage{
+    .seccion {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       margin: auto;
       padding: auto;
       background-color: whitesmoke;

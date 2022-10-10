@@ -30,10 +30,31 @@
       </option>
     </select>
   </section>
-  <section id="seccionPage">
-    <section id="seccionTabla">
-      <h1>TABLA RESUMEN</h1>
-      <table class="table tamanio" id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios">
+
+  <section class="seccion">
+    <h1>TABLA RESUMEN</h1>
+    <table class="table tamanio" id="tablaTotal" *ngIf="opcionDepartamento == 0; else tMunicipios">
+      <thead>
+        <tr>
+          <th>{{ stringDepartamento }}</th>
+          <th *ngFor="let label of labelTable">{{ label }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of mainDataSet; let i = index">
+          <th>{{ departamentos[i] }}</th>
+          <td *ngFor="let item of row">{{ item }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>TOTAL</th>
+          <th *ngFor="let item of totalDataSet">{{ item }}</th>
+        </tr>
+      </tfoot>
+    </table>
+    <ng-template #tMunicipios>
+      <table class="table" id="tablaTotal">
         <thead>
           <tr>
             <th>{{ stringDepartamento }}</th>
@@ -42,7 +63,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let row of mainDataSet; let i = index">
-            <th>{{ departamentos[i] }}</th>
+            <th>{{ municipios[i] }}</th>
             <td *ngFor="let item of row">{{ item }}</td>
           </tr>
         </tbody>
@@ -53,42 +74,18 @@
           </tr>
         </tfoot>
       </table>
-      <ng-template #tMunicipios>
-        <table class="table" id="tablaTotal">
-          <thead>
-            <tr>
-              <th>{{ stringDepartamento }}</th>
-              <th *ngFor="let label of labelTable">{{ label }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of mainDataSet; let i = index">
-              <th>{{ municipios[i] }}</th>
-              <td *ngFor="let item of row">{{ item }}</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>TOTAL</th>
-              <th *ngFor="let item of totalDataSet">{{ item }}</th>
-            </tr>
-          </tfoot>
-        </table>
-      </ng-template>
-    </section>
-    <section class="sectionGraficas">
-      <div class="tamanio mt-0" id="main-chart">
-        <h1>GRAFICA POR {{ stringDepartamento }}</h1>
-        <canvas width="420" height="175" baseChart [data]="barChartData1" [options]="barChartOptions1"
-          [plugins]="barChartPlugins1" [type]="barChartType1">
-        </canvas>
-      </div>
-      <div class="tamanio mt-0" id="left-chart">
-        <h1 style="margin-bottom: 10px;">GRAFICA RESUMEN</h1>
-        <canvas width="420" height="175" baseChart [data]="barChartData2" [options]="barChartOptions2"
-          [plugins]="barChartPlugins2" [type]="barChartType2">
-        </canvas>
-      </div>
-    </section>
+    </ng-template>
+    <div class="tamanio mt-0" id="main-chart">
+      <h1>GRAFICA POR {{ stringDepartamento }}</h1>
+      <canvas width="420" height="175" baseChart [data]="barChartData1" [options]="barChartOptions1"
+        [plugins]="barChartPlugins1" [type]="barChartType1">
+      </canvas>
+    </div>
+    <div class="tamanio mt-0" id="left-chart">
+      <h1 style="margin-bottom: 10px;">GRAFICA RESUMEN</h1>
+      <canvas width="420" height="175" baseChart [data]="barChartData2" [options]="barChartOptions2"
+        [plugins]="barChartPlugins2" [type]="barChartType2">
+      </canvas>
+    </div>
   </section>
 </div>
