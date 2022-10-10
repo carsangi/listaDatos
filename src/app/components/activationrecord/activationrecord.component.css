@@ -69,12 +69,17 @@ mat-datepicker-toggle:hover {
   font-size: 14px;
 }
 
-#tablaHistorial {
+.backgrounTabla {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin: auto;
   padding: auto;
   background-color: whitesmoke;
+}
+
+.backgrounTabla h2{
+  margin-top: 10px;
 }
 
 .radioButton {
@@ -143,7 +148,14 @@ table,th,td{
 #tabla2{
   width: 100%;
 }
-
+#tabla3{
+  margin-top: 6px;
+  width: 100%;
+}
+#tabla4{
+  margin-top: 6px;
+  width: 100%;
+}
 .mesesClass{
   width: 100px;
 }

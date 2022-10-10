@@ -166,6 +166,7 @@ export class RequestrecordComponent implements OnInit {
   }
 
   createMainTable(arreglo: Array<Service>, fechaDesde: Moment, fechaHasta: Moment){
+    console.log(arreglo);
     this.filtrarEstadosOperacion(arreglo);
     this.filtrarMunicipios(arreglo);
     this.createMonths(fechaDesde, fechaHasta);
