@@ -22,6 +22,9 @@ import { ActivationstatusComponent } from './components/activationstatus/activat
 import { RequeststatusComponent } from './components/requeststatus/requeststatus.component';
 import { RequestrecordComponent } from './components/requestrecord/requestrecord.component';
 import { ActivationrecordComponent } from './components/activationrecord/activationrecord.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { SpinnerModule } from './components/spinner/spinner.module';
+
 
 @NgModule({
   declarations: [
@@ -33,7 +36,7 @@ import { ActivationrecordComponent } from './components/activationrecord/activat
     ActivationstatusComponent,
     RequeststatusComponent,
     RequestrecordComponent,
-    ActivationrecordComponent
+    ActivationrecordComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,8 @@ import { ActivationrecordComponent } from './components/activationrecord/activat
     MatCheckboxModule,
     MatRadioModule,
     MatNativeDateModule,
+    NgxSpinnerModule,
+    SpinnerModule,
   ],
   providers: [
     ConsultaAPIService,

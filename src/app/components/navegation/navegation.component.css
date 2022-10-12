@@ -5,7 +5,9 @@ body {
   text-transform: uppercase;
   text-align: center;
 }
-
+#icono{
+  height: 70px;
+}
 .wrap {
   display: inline-block;
   -webkit-box-shadow: 0 0 70px #fff;
@@ -29,7 +31,9 @@ body {
 a {
   text-decoration: none;
   color: #fff;
+  align-items: center;
   display: block;
+  height: 100px;
 }
 
 ul {
